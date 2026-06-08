@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section admin-page-section">
+    <div class="container">
+        
+        <!-- ==========================================
+             ADMIN LOGIN CARD (Shown when not authenticated as admin)
+             ========================================== -->
+        <div id="adminAuthCard" class="card auth-card text-center">
+            <h3><i class='bx bx-shield-quarter admin-shield-icon'></i> Operator Login</h3>
+            <p>Authenticate with administrator credentials to enter the control panel.</p>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminUsername">Admin Username</label>
+                    <div class="input-wrapper">
+                        <i class='bx bx-user-voice'></i>
+                        <input type="text" id="adminUsername" required placeholder="admin">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <div class="input-wrapper">
+                        <i class='bx bx-lock-alt'></i>
+                        <input type="password" id="adminPassword" required placeholder="••••••••">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class='bx bx-key'></i> Access Control Panel
+                </button>
+            </form>
+            <p class="auth-hint">Default Operator: <code>admin</code> / <code>admin123</code></p>
+        </div>
+
+        <!-- ==========================================
+             ADMIN DASHBOARD PANEL (Shown when logged in as admin)
+             ========================================== -->
+        <div id="adminDashboard" class="admin-dashboard-container hidden">
+            <!-- Header -->
+            <div class="dashboard-header card">
+                <div class="user-greeting">
+                    <i class='bx bxs-shield-alt-2 greeting-avatar admin-avatar'></i>
+                    <div>
+                        <h3>Operator Terminal</h3>
+                        <p>Central Database Control & Operations</p>
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm" id="adminLogoutBtn">
+                    <i class='bx bx-log-out'></i> Terminate Session
+                </button>
+            </div>
+            
+            <!-- Database Metrics Cards -->
+            <div class="metrics-grid" id="adminMetricsGrid">
+                <div class="metric-card card">
+                    <h3 id="statUsers">0</h3>
+                    <p><i class='bx bx-user'></i> Registered Users</p>
+                </div>
+                <div class="metric-card card">
+                    <h3 id="statTasks">0</h3>
+                    <p><i class='bx bx-task'></i> Total Tasks</p>
+                </div>
+                <div class="metric-card card">
+                    <h3 id="statProducts">0</h3>
+                    <p><i class='bx bx-package'></i> Store Items</p>
+                </div>
+                <div class="metric-card card">
+                    <h3 id="statOrders">0</h3>
+                    <p><i class='bx bx-receipt'></i> Orders Made</p>
+                </div>
+                <div class="metric-card card">
+                    <h3 id="statMessages">0</h3>
+                    <p><i class='bx bx-message-alt-dots'></i> Messages Inbox</p>
+                </div>
+                <div class="metric-card card">
+                    <h3 id="statPosts">0</h3>
+                    <p><i class='bx bx-book-open'></i> Blog Posts</p>
+                </div>
+            </div>
+
+            <!-- Workspace Division Tabs -->
+            <div class="admin-workspace-layout">
+                <!-- Sidebar tabs list -->
+                <div class="admin-tabs-list card">
+                    <button class="admin-tab-btn active" data-tab="messages"><i class='bx bx-envelope'></i> Contact Messages</button>
+                    <button class="admin-tab-btn" data-tab="catalog"><i class='bx bx-store-alt'></i> Manage Shop Catalog</button>
+                </div>
+                
+                <!-- Workspace Container -->
+                <div class="admin-workspace-content card">
+                    <!-- 1. Contact Messages Tab -->
+                    <div class="admin-tab-pane active" id="pane-messages">
+                        <div class="pane-header-row">
+                            <h3>Feedback & Inquiry Inbox</h3>
+                            <span class="badge" id="adminUnreadBadge">0 Unread</span>
+                        </div>
+                        
+                        <div class="admin-messages-list" id="adminMessagesList">
+                            <!-- Loaded dynamically -->
+                            <div class="loading-spinner">
+                                <i class='bx bx-loader-alt bx-spin'></i> Querying inbox...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2. Store Catalog Tab -->
+                    <div class="admin-tab-pane" id="pane-catalog">
+                        <div class="pane-header-row">
+                            <h3>Store Catalog Catalog</h3>
+                            <button class="btn btn-primary btn-sm" onclick="openAddProductModal()">
+                                <i class='bx bx-plus'></i> Add Catalog Product
+                            </button>
+                        </div>
+                        
+                        <div class="orders-table-wrapper">
+                            <table class="catalog-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Details</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminProductsCatalogList">
+                                    <!-- Loaded dynamically -->
+                                    <tr>
+                                        <td colspan="5" class="text-center">No products found.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ADD/EDIT PRODUCT MODAL -->
+<div class="modal-overlay" id="productFormModal">
+    <div class="modal-container admin-modal-container card">
+        <button class="modal-close-btn" id="productFormModalCloseBtn"><i class='bx bx-x'></i></button>
+        <div class="modal-body-form">
+            <h3 id="productFormModalHeading">Create Catalog Product</h3>
+            <form id="adminProductForm">
+                <input type="hidden" id="adminProductId">
+                <div class="form-group-row">
+                    <div class="form-group flex-2">
+                        <label for="adminProductName">Product Name</label>
+                        <input type="text" id="adminProductName" required placeholder="e.g. Ergonomic Office Desk">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminProductCategory">Category</label>
+                        <input type="text" id="adminProductCategory" required placeholder="e.g. Desk Setup">
+                    </div>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="adminProductPrice">Price ($)</label>
+                        <input type="number" id="adminProductPrice" required step="0.01" min="0.01" placeholder="99.99">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="adminProductDesc">Description</label>
+                    <textarea id="adminProductDesc" required rows="3" placeholder="Enter hardware description features..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="adminProductImage">Image SVG Representation (Optional)</label>
+                    <textarea id="adminProductImage" rows="3" placeholder="<svg ...></svg> code or URL. Leave blank for default keycap box."></textarea>
+                </div>
+                <div class="modal-form-actions">
+                    <button type="submit" class="btn btn-primary" id="adminProductSubmitBtn">Save Catalog Item</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

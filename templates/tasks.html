@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section tasks-page-section">
+    <div class="container small-container">
+        
+        <!-- ==========================================
+             AUTHENTICATION CARD (Shown when unlogged)
+             ========================================== -->
+        <div id="tasksAuthCard" class="card auth-card text-center">
+            <div class="auth-toggle-headers">
+                <button id="authTabLogin" class="auth-tab-btn active" onclick="switchAuthTab('login')">Login</button>
+                <button id="authTabRegister" class="auth-tab-btn" onclick="switchAuthTab('register')">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="tasksLoginForm" class="auth-form active">
+                <h3>Welcome Back</h3>
+                <p>Log in to access your personal task database tracker.</p>
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <div class="input-wrapper">
+                        <i class='bx bx-user'></i>
+                        <input type="text" id="loginUsername" required placeholder="testuser">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="input-wrapper">
+                        <i class='bx bx-lock-alt'></i>
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class='bx bx-log-in'></i> Login
+                </button>
+                <p class="auth-hint">Demo user credentials: <code>testuser</code> / <code>test1234</code></p>
+            </form>
+            
+            <!-- Register Form -->
+            <form id="tasksRegisterForm" class="auth-form">
+                <h3>Create Account</h3>
+                <p>Register a new account to isolate and track your tasks.</p>
+                <div class="form-group">
+                    <label for="registerUsername">Username</label>
+                    <div class="input-wrapper">
+                        <i class='bx bx-user-plus'></i>
+                        <input type="text" id="registerUsername" required placeholder="newdeveloper">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <div class="input-wrapper">
+                        <i class='bx bx-lock-open-alt'></i>
+                        <input type="password" id="registerPassword" required placeholder="••••••••">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class='bx bx-user-check'></i> Create & Login
+                </button>
+            </form>
+        </div>
+
+        <!-- ==========================================
+             TASKS DASHBOARD WORKSPACE (Shown when logged)
+             ========================================== -->
+        <div id="tasksDashboard" class="tasks-dashboard-container hidden">
+            <!-- Header bar -->
+            <div class="dashboard-header card">
+                <div class="user-greeting">
+                    <i class='bx bxs-user-circle greeting-avatar'></i>
+                    <div>
+                        <h3 id="dashboardUserWelcome">Hello, Developer!</h3>
+                        <p>Task Database Tracker Session</p>
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm" id="tasksLogoutBtn">
+                    <i class='bx bx-log-out'></i> Log Out
+                </button>
+            </div>
+            
+            <!-- Creation Controls -->
+            <div class="card add-task-card">
+                <h3><i class='bx bx-plus-circle'></i> Create New Task</h3>
+                <form id="addTaskForm" class="add-task-form">
+                    <div class="form-group-row">
+                        <div class="form-group flex-2">
+                            <label for="taskTitle">Task Title</label>
+                            <input type="text" id="taskTitle" required placeholder="e.g. Deploy website to cloud host">
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDueDate">Due Date</label>
+                            <input type="date" id="taskDueDate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDesc">Description (Optional)</label>
+                        <textarea id="taskDesc" rows="2" placeholder="Explain tasks details here..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class='bx bx-check'></i> Save Task
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Tasks View and Filters -->
+            <div class="tasks-workspace card">
+                <div class="workspace-filters-row">
+                    <div class="tasks-summary-count" id="tasksSummaryCount">
+                        0 Tasks Remaining
+                    </div>
+                    <div class="workspace-filter-tabs">
+                        <button class="task-filter-btn active" data-filter="all">All</button>
+                        <button class="task-filter-btn" data-filter="Pending">Pending</button>
+                        <button class="task-filter-btn" data-filter="Completed">Completed</button>
+                    </div>
+                </div>
+                
+                <!-- Tasks List -->
+                <div id="tasksList" class="tasks-list">
+                    <!-- Loaded dynamically by tasks.js -->
+                    <div class="loading-spinner">
+                        <i class='bx bx-loader-alt bx-spin'></i> Querying tasks...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- EDIT TASK MODAL OVERLAY -->
+<div class="modal-overlay" id="editTaskModal">
+    <div class="modal-container task-modal-container card">
+        <button class="modal-close-btn" id="editTaskModalCloseBtn"><i class='bx bx-x'></i></button>
+        <div class="modal-body-form">
+            <h3><i class='bx bx-edit-alt'></i> Modify Task Details</h3>
+            <form id="editTaskForm">
+                <input type="hidden" id="editTaskId">
+                <div class="form-group">
+                    <label for="editTaskTitle">Task Title</label>
+                    <input type="text" id="editTaskTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTaskDueDate">Due Date</label>
+                    <input type="date" id="editTaskDueDate">
+                </div>
+                <div class="form-group">
+                    <label for="editTaskDesc">Description</label>
+                    <textarea id="editTaskDesc" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editTaskStatus">Status</label>
+                    <select id="editTaskStatus">
+                        <option value="Pending">Pending</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="modal-form-actions">
+                    <button type="submit" class="btn btn-primary">Update Details</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tasks.js') }}"></script>
+{% endblock %}

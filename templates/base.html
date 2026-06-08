@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhinay | Full-Stack Portfolio Hub</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Boxicons (Premium web icons) -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Background Glow Elements -->
+    <div class="blob-glow blob-1"></div>
+    <div class="blob-glow blob-2"></div>
+    <div class="blob-glow blob-3"></div>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="logo-accent">&lt;</span>Abhinay<span class="logo-accent"> /&gt;</span>
+            </a>
+            
+            <nav class="nav-menu" id="navMenu">
+                <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                    <i class='bx bx-home-alt nav-icon'></i>Portfolio
+                </a>
+                <a href="/tasks" class="nav-link {% if request.path == '/tasks' %}active{% endif %}">
+                    <i class='bx bx-task nav-icon'></i>Tasks
+                </a>
+                <a href="/shop" class="nav-link {% if request.path == '/shop' %}active{% endif %}">
+                    <i class='bx bx-shopping-bag nav-icon'></i>Shop
+                </a>
+                <a href="/blog" class="nav-link {% if request.path == '/blog' %}active{% endif %}">
+                    <i class='bx bx-news nav-icon'></i>Blog
+                </a>
+                <a href="/admin" class="nav-link {% if request.path == '/admin' %}active{% endif %}">
+                    <i class='bx bx-slider-alt nav-icon'></i>Admin
+                </a>
+            </nav>
+            
+            <div class="nav-auth" id="navAuth">
+                <!-- Session status loaded dynamically by main.js -->
+                <button class="btn btn-primary btn-sm login-btn" onclick="window.location.href='/tasks'">
+                    <i class='bx bx-log-in'></i> Login
+                </button>
+            </div>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Slot -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Global Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="/" class="nav-logo">
+                    <span class="logo-accent">&lt;</span>Abhinay<span class="logo-accent"> /&gt;</span>
+                </a>
+                <p>Building high-performance, visually gorgeous web systems with modern backend stacks.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Explore Hub</h4>
+                <ul>
+                    <li><a href="/">Portfolio Showcase</a></li>
+                    <li><a href="/tasks">Task Tracker</a></li>
+                    <li><a href="/shop">Storefront Hub</a></li>
+                    <li><a href="/blog">Articles & Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-socials">
+                <h4>Social Connection</h4>
+                <div class="social-icons">
+                    <a href="https://github.com/Abhinay-tech-stack/personal-portifolio" target="_blank" aria-label="GitHub"><i class='bx bxl-github'></i></a>
+                    <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class='bx bxl-linkedin'></i></a>
+                    <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class='bx bxl-twitter'></i></a>
+                </div>
+                <p class="admin-entry-link">System Operator: <a href="/admin">Dashboard Portal</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Abhinay. Designed with custom CSS variables & Flask. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

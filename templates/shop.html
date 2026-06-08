@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section shop-page-section">
+    <div class="container">
+        
+        <!-- Header / Navigation info inside storefront -->
+        <div class="shop-header-row card">
+            <div>
+                <h2><i class='bx bx-shopping-bag'></i> Hardware Storefront</h2>
+                <p>Browse premium tech hardware, configure your workstation, and track your order invoice.</p>
+            </div>
+            
+            <div class="shop-actions">
+                <button class="btn btn-secondary active-cart-trigger" id="cartToggleBtn">
+                    <i class='bx bx-cart'></i> Cart (<span id="cartCountBadge">0</span>)
+                </button>
+            </div>
+        </div>
+
+        <div class="shop-main-layout">
+            <!-- Left Panel: Products List -->
+            <div class="shop-products-panel">
+                <!-- Search & Filters -->
+                <div class="shop-filter-bar card">
+                    <div class="search-box">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="shopSearchInput" placeholder="Search workstation gear...">
+                    </div>
+                    <div class="shop-categories" id="shopCategories">
+                        <button class="shop-cat-btn active" data-cat="all">All Gear</button>
+                        <!-- Categories loaded dynamically by shop.js -->
+                    </div>
+                </div>
+
+                <!-- Product Catalog Grid -->
+                <div class="products-catalog-grid" id="productsCatalogGrid">
+                    <!-- Loaded dynamically by shop.js -->
+                    <div class="loading-spinner">
+                        <i class='bx bx-loader-alt bx-spin'></i> Loading storefront products...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel/Drawer: Shopping Cart -->
+            <div class="shop-cart-panel card" id="cartDrawer">
+                <div class="cart-header">
+                    <h3><i class='bx bx-cart'></i> Selected Cart</h3>
+                    <button class="cart-close-btn" id="cartCloseBtn"><i class='bx bx-x'></i></button>
+                </div>
+                
+                <div class="cart-items-list" id="cartItemsList">
+                    <!-- Populated dynamically -->
+                    <div class="empty-cart-msg">
+                        <i class='bx bx-cart-add'></i>
+                        <p>Your shopping cart is empty.</p>
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="cartSubtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Est. Tax (8%):</span>
+                        <span id="cartTax">$0.00</span>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span>Total:</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                    
+                    <div id="cartCheckoutAuthMessage" class="cart-auth-hint hidden">
+                        <p class="warning-text"><i class='bx bx-info-circle'></i> Authentication required to place orders.</p>
+                        <button class="btn btn-secondary btn-sm btn-block" onclick="openShopLoginModal()">
+                            Log In / Register
+                        </button>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-block" id="cartCheckoutBtn">
+                        <i class='bx bx-credit-card-front'></i> Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             ORDER TRACKING HISTORY (Visible when logged in)
+             ========================================== -->
+        <div id="shopOrderHistorySection" class="shop-orders-section card hidden">
+            <h3><i class='bx bx-package'></i> Track Your Orders</h3>
+            <p>View invoices and delivery tracking statuses for your account.</p>
+            <div class="orders-table-wrapper">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date Placed</th>
+                            <th>Items Purchased</th>
+                            <th>Invoice Total</th>
+                            <th>Fulfillment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersHistoryList">
+                        <!-- Loaded dynamically -->
+                        <tr>
+                            <td colspan="5" class="text-center">No orders found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- PRODUCT DETAILS OVERLAY MODAL -->
+<div class="modal-overlay" id="productModal">
+    <div class="modal-container project-modal-container card">
+        <button class="modal-close-btn" id="productModalCloseBtn"><i class='bx bx-x'></i></button>
+        <div class="modal-body">
+            <div class="modal-graphic" id="productModalGraphic">
+                <!-- SVG logo -->
+            </div>
+            <div class="modal-content">
+                <span class="badge" id="productModalCategory">Category</span>
+                <h3 id="productModalName">Product Name</h3>
+                <p id="productModalDesc" class="modal-desc">Description details...</p>
+                <div class="product-modal-price" id="productModalPrice">$0.00</div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" id="productModalAddToCartBtn">
+                        <i class='bx bx-cart-add'></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- IN-SHOP LOGIN/REGISTER MODAL -->
+<div class="modal-overlay" id="shopLoginModal">
+    <div class="modal-container auth-modal-container card">
+        <button class="modal-close-btn" id="shopLoginModalCloseBtn"><i class='bx bx-x'></i></button>
+        <div class="modal-body-form">
+            <div class="auth-toggle-headers">
+                <button id="shopAuthTabLogin" class="auth-tab-btn active" onclick="switchShopAuthTab('login')">Login</button>
+                <button id="shopAuthTabRegister" class="auth-tab-btn" onclick="switchShopAuthTab('register')">Register</button>
+            </div>
+            
+            <form id="shopLoginForm" class="auth-form active">
+                <h3>Store Account Login</h3>
+                <p>Log in to link and check out your shopping cart.</p>
+                <div class="form-group">
+                    <label for="shopLoginUsername">Username</label>
+                    <input type="text" id="shopLoginUsername" required placeholder="testuser">
+                </div>
+                <div class="form-group">
+                    <label for="shopLoginPassword">Password</label>
+                    <input type="password" id="shopLoginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Log In & Checkout</button>
+            </form>
+            
+            <form id="shopRegisterForm" class="auth-form">
+                <h3>Create Account</h3>
+                <p>Sign up to tracking invoices and cart transactions.</p>
+                <div class="form-group">
+                    <label for="shopRegisterUsername">Username</label>
+                    <input type="text" id="shopRegisterUsername" required placeholder="buyer01">
+                </div>
+                <div class="form-group">
+                    <label for="shopRegisterPassword">Password</label>
+                    <input type="password" id="shopRegisterPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register & Checkout</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/shop.js') }}"></script>
+{% endblock %}
