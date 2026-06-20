@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline | Carbon Cinema</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Cinzel:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --bg-card: rgba(15, 15, 15, 0.8);
+            --border-glass: rgba(212, 175, 55, 0.15);
+            --color-primary: #D4AF37;
+            --color-secondary: #AA8B2C;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-heading: 'Outfit', system-ui, sans-serif;
+            --font-luxury: 'Cinzel', Georgia, serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle gold background glow */
+        .glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .glow-1 { top: -100px; left: -100px; }
+        .glow-2 { bottom: -100px; right: -100px; }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .logo {
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .logo svg {
+            width: 70px;
+            height: 70px;
+            fill: var(--color-primary);
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 30%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-family: var(--font-luxury);
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: #000000;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 35px;
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5), 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .support-info {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .support-info a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .support-info a:hover {
+            color: var(--text-main);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
+    <div class="container">
+        <div class="logo">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 15 L62 38 L88 30 L80 65 L20 65 L12 30 L38 38 Z" />
+                <path d="M25 72 L75 72 L75 78 L25 78 Z" />
+                <path d="M15 85 C30 82, 45 80, 50 80 C55 80, 70 82, 85 85 C80 87, 75 88, 50 88 C25 88, 20 87, 15 85 Z" />
+            </svg>
+        </div>
+        <h1>Connection Lost</h1>
+        <h2>Carbon Cinema</h2>
+        <p>
+            You are currently offline. Carbon Cinema's creative showcase, real-time vehicle production tracker, and booking scheduler require an active internet connection. Please verify your network status and try again.
+        </p>
+        <button class="btn" onclick="window.location.reload();">
+            Check Connection
+        </button>
+
+        <div class="support-info">
+            Studio Hotline: <a href="https://wa.me/918121245333" target="_blank">+91 81212 45333</a><br>
+            Email Support: <a href="mailto:tilaksontana59@gmail.com">tilaksontana59@gmail.com</a>
+        </div>
+    </div>
+
+    <script>
+        // Check connection periodically or listen to online event
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>

@@ -64,6 +64,11 @@ def serve_manifest():
     response.headers['Content-Type'] = 'application/json'
     return response
 
+@app.route('/offline.html')
+def serve_offline():
+    return render_template('offline.html')
+
+
 
 # ==========================================
 # AUTHENTICATION API
