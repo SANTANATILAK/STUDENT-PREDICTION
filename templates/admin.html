@@ -8,11 +8,11 @@
              ADMIN LOGIN CARD (Shown when not authenticated as admin)
              ========================================== -->
         <div id="adminAuthCard" class="card auth-card text-center">
-            <h3><i class='bx bx-shield-quarter admin-shield-icon'></i> Operator Login</h3>
-            <p>Authenticate with administrator credentials to enter the control panel.</p>
+            <h3><i class='bx bx-shield-quarter admin-shield-icon' style="color: var(--color-primary);"></i> Studio Portal Login</h3>
+            <p>Authenticate with director credentials to enter the Studio Management Portal.</p>
             <form id="adminLoginForm">
                 <div class="form-group">
-                    <label for="adminUsername">Admin Username</label>
+                    <label for="adminUsername">Director Username</label>
                     <div class="input-wrapper">
                         <i class='bx bx-user-voice'></i>
                         <input type="text" id="adminUsername" required placeholder="admin">
@@ -26,10 +26,10 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">
-                    <i class='bx bx-key'></i> Access Control Panel
+                    <i class='bx bx-key'></i> Access Studio Dashboard
                 </button>
             </form>
-            <p class="auth-hint">Default Operator: <code>admin</code> / <code>admin123</code></p>
+            <p class="auth-hint">Default Credentials: <code>admin</code> / <code>admin123</code></p>
         </div>
 
         <!-- ==========================================
@@ -39,10 +39,10 @@
             <!-- Header -->
             <div class="dashboard-header card">
                 <div class="user-greeting">
-                    <i class='bx bxs-shield-alt-2 greeting-avatar admin-avatar'></i>
+                    <i class='bx bxs-shield-alt-2 greeting-avatar admin-avatar' style="color: var(--color-primary);"></i>
                     <div>
-                        <h3>Operator Terminal</h3>
-                        <p>Central Database Control & Operations</p>
+                        <h3>Studio Director Panel</h3>
+                        <p>Central Operations & Schedule Database</p>
                     </div>
                 </div>
                 <button class="btn btn-secondary btn-sm" id="adminLogoutBtn">
@@ -53,28 +53,28 @@
             <!-- Database Metrics Cards -->
             <div class="metrics-grid" id="adminMetricsGrid">
                 <div class="metric-card card">
-                    <h3 id="statUsers">0</h3>
-                    <p><i class='bx bx-user'></i> Registered Users</p>
+                    <h3 id="statUsers" style="color: var(--color-primary);">0</h3>
+                    <p><i class='bx bx-user'></i> Registered Clients</p>
                 </div>
                 <div class="metric-card card">
-                    <h3 id="statTasks">0</h3>
-                    <p><i class='bx bx-task'></i> Total Tasks</p>
+                    <h3 id="statTasks" style="color: var(--color-primary);">0</h3>
+                    <p><i class='bx bx-play-circle'></i> Active Shoots</p>
                 </div>
                 <div class="metric-card card">
-                    <h3 id="statProducts">0</h3>
-                    <p><i class='bx bx-package'></i> Store Items</p>
+                    <h3 id="statProducts" style="color: var(--color-primary);">0</h3>
+                    <p><i class='bx bx-store-alt'></i> Prints & Presets</p>
                 </div>
                 <div class="metric-card card">
-                    <h3 id="statOrders">0</h3>
-                    <p><i class='bx bx-receipt'></i> Orders Made</p>
+                    <h3 id="statOrders" style="color: var(--color-primary);">0</h3>
+                    <p><i class='bx bx-receipt'></i> Store Sales</p>
                 </div>
                 <div class="metric-card card">
-                    <h3 id="statMessages">0</h3>
-                    <p><i class='bx bx-message-alt-dots'></i> Messages Inbox</p>
+                    <h3 id="statMessages" style="color: var(--color-primary);">0</h3>
+                    <p><i class='bx bx-message-alt-dots'></i> Shoot Enquiries</p>
                 </div>
                 <div class="metric-card card">
-                    <h3 id="statPosts">0</h3>
-                    <p><i class='bx bx-book-open'></i> Blog Posts</p>
+                    <h3 id="statPosts" style="color: var(--color-primary);">0</h3>
+                    <p><i class='bx bx-book-open'></i> Journal Stories</p>
                 </div>
             </div>
 
@@ -82,8 +82,8 @@
             <div class="admin-workspace-layout">
                 <!-- Sidebar tabs list -->
                 <div class="admin-tabs-list card">
-                    <button class="admin-tab-btn active" data-tab="messages"><i class='bx bx-envelope'></i> Contact Messages</button>
-                    <button class="admin-tab-btn" data-tab="catalog"><i class='bx bx-store-alt'></i> Manage Shop Catalog</button>
+                    <button class="admin-tab-btn active" data-tab="messages"><i class='bx bx-envelope'></i> Booking Enquiries</button>
+                    <button class="admin-tab-btn" data-tab="catalog"><i class='bx bx-store-alt'></i> Shop Inventory</button>
                 </div>
                 
                 <!-- Workspace Container -->
@@ -91,7 +91,7 @@
                     <!-- 1. Contact Messages Tab -->
                     <div class="admin-tab-pane active" id="pane-messages">
                         <div class="pane-header-row">
-                            <h3>Feedback & Inquiry Inbox</h3>
+                            <h3>Client Enquiries Inbox</h3>
                             <span class="badge" id="adminUnreadBadge">0 Unread</span>
                         </div>
                         
@@ -106,9 +106,9 @@
                     <!-- 2. Store Catalog Tab -->
                     <div class="admin-tab-pane" id="pane-catalog">
                         <div class="pane-header-row">
-                            <h3>Store Catalog Catalog</h3>
+                            <h3>Shop Inventory Items</h3>
                             <button class="btn btn-primary btn-sm" onclick="openAddProductModal()">
-                                <i class='bx bx-plus'></i> Add Catalog Product
+                                <i class='bx bx-plus'></i> Add Print/Preset Item
                             </button>
                         </div>
                         
@@ -126,7 +126,7 @@
                                 <tbody id="adminProductsCatalogList">
                                     <!-- Loaded dynamically -->
                                     <tr>
-                                        <td colspan="5" class="text-center">No products found.</td>
+                                        <td colspan="5" class="text-center">No catalog items found.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -144,32 +144,32 @@
     <div class="modal-container admin-modal-container card">
         <button class="modal-close-btn" id="productFormModalCloseBtn"><i class='bx bx-x'></i></button>
         <div class="modal-body-form">
-            <h3 id="productFormModalHeading">Create Catalog Product</h3>
+            <h3 id="productFormModalHeading">Create Catalog Item</h3>
             <form id="adminProductForm">
                 <input type="hidden" id="adminProductId">
                 <div class="form-group-row">
                     <div class="form-group flex-2">
-                        <label for="adminProductName">Product Name</label>
-                        <input type="text" id="adminProductName" required placeholder="e.g. Ergonomic Office Desk">
+                        <label for="adminProductName">Item Name</label>
+                        <input type="text" id="adminProductName" required placeholder="e.g. Aventador SVJ Metal Print">
                     </div>
                     <div class="form-group">
                         <label for="adminProductCategory">Category</label>
-                        <input type="text" id="adminProductCategory" required placeholder="e.g. Desk Setup">
+                        <input type="text" id="adminProductCategory" required placeholder="e.g. Metal Prints">
                     </div>
                 </div>
                 <div class="form-group-row">
                     <div class="form-group">
                         <label for="adminProductPrice">Price ($)</label>
-                        <input type="number" id="adminProductPrice" required step="0.01" min="0.01" placeholder="99.99">
+                        <input type="number" id="adminProductPrice" required step="0.01" min="0.01" placeholder="299.00">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="adminProductDesc">Description</label>
-                    <textarea id="adminProductDesc" required rows="3" placeholder="Enter hardware description features..."></textarea>
+                    <textarea id="adminProductDesc" required rows="3" placeholder="Enter size details, paper material, floating mounts..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="adminProductImage">Image SVG Representation (Optional)</label>
-                    <textarea id="adminProductImage" rows="3" placeholder="<svg ...></svg> code or URL. Leave blank for default keycap box."></textarea>
+                    <label for="adminProductImage">Image SVG Code (Optional)</label>
+                    <textarea id="adminProductImage" rows="3" placeholder="<svg ...></svg> code or URL. Leave blank for default graphic."></textarea>
                 </div>
                 <div class="modal-form-actions">
                     <button type="submit" class="btn btn-primary" id="adminProductSubmitBtn">Save Catalog Item</button>

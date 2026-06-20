@@ -2,34 +2,35 @@
    DESIGN VARIABLES & INITIALIZATION
    ========================================================================== */
 :root {
-    --bg-dark: #0a0b10;
-    --bg-card: rgba(20, 22, 36, 0.55);
-    --bg-card-hover: rgba(28, 30, 48, 0.7);
-    --border-glass: rgba(255, 255, 255, 0.06);
-    --border-glass-active: rgba(99, 102, 241, 0.3);
+    --bg-dark: #050505;             /* Deep premium velvet black */
+    --bg-card: rgba(15, 15, 15, 0.65); /* Translucent gold-tinted obsidian glass */
+    --bg-card-hover: rgba(25, 25, 25, 0.8);
+    --border-glass: rgba(212, 175, 55, 0.08); /* Subtle gold stroke */
+    --border-glass-active: rgba(212, 175, 55, 0.35); /* Glowing gold stroke */
     
-    --color-primary: #6366f1;       /* Indigo */
-    --color-primary-glow: rgba(99, 102, 241, 0.15);
-    --color-secondary: #a855f7;     /* Purple */
-    --color-accent: #06b6d4;        /* Cyan */
-    --color-accent-green: #10b981;  /* Emerald */
+    --color-primary: #D4AF37;       /* Luxury Gold */
+    --color-primary-glow: rgba(212, 175, 55, 0.15);
+    --color-secondary: #AA8B2C;     /* Deep Warm Gold */
+    --color-accent: #F3E5AB;        /* Champagne Gold */
+    --color-accent-green: #10b981;  /* Emerald (Keep for success actions) */
     --color-danger: #ef4444;        /* Red */
     --color-warning: #f59e0b;       /* Amber */
     
-    --text-main: #f3f4f6;
-    --text-muted: #9ca3af;
-    --text-dark: #4b5563;
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --text-dark: #666666;
     
     --gradient-hero: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     --gradient-accent: linear-gradient(135deg, var(--color-accent), var(--color-primary));
-    --gradient-dark: linear-gradient(180deg, #11131e 0%, #08090f 100%);
+    --gradient-dark: linear-gradient(180deg, #141414 0%, #050505 100%);
     
-    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
-    --shadow-glow-accent: 0 0 20px rgba(6, 182, 212, 0.2);
+    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 0 20px rgba(212, 175, 55, 0.25);
+    --shadow-glow-accent: 0 0 20px rgba(243, 229, 171, 0.25);
     
     --font-sans: 'Inter', sans-serif;
     --font-heading: 'Outfit', sans-serif;
+    --font-luxury: 'Cinzel', serif;  /* Luxury serif for branding & headers */
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --border-radius-sm: 8px;
@@ -1879,4 +1880,267 @@ input:focus, select:focus, textarea:focus {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+}
+
+/* ==========================================================================
+   CARBON CINEMA CUSTOM SYSTEM ADDITIONS (Cinematic Hero, Portfolio Cards, UPI Payment)
+   ========================================================================== */
+
+/* Centered Cinematic Hero Layout */
+.hero-section.cinematic {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+    margin-top: -75px;
+}
+.hero-video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    filter: brightness(0.35) contrast(1.15);
+}
+.hero-overlay-dark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0,0,0,0.15) 0%, rgba(5,5,5,0.92) 80%),
+                linear-gradient(to bottom, rgba(5,5,5,0.2) 0%, #050505 100%);
+    z-index: 2;
+}
+.hero-content-cinematic {
+    position: relative;
+    z-index: 3;
+    max-width: 900px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.hero-content-cinematic h1 {
+    font-family: var(--font-luxury), var(--font-heading);
+    font-size: 4.5rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffffff 40%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-content-cinematic h2 {
+    font-family: var(--font-sans);
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+.hero-content-cinematic p {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 650px;
+    margin-bottom: 2.8rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+.hero-logo-crown {
+    width: 90px;
+    height: 90px;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    animation: pulseGlow 3s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+    0%, 100% { filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4)); }
+    50% { filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8)); }
+}
+
+/* Portfolio Card Design */
+.project-card {
+    position: relative;
+    overflow: hidden;
+    padding: 0 !important; /* Let image bleed */
+    border-radius: var(--border-radius-md);
+    background: var(--bg-card);
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+}
+.project-card-image-wrap {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid var(--border-glass);
+}
+.project-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.project-card:hover .project-card-img {
+    transform: scale(1.08);
+}
+.project-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+.project-card-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.6rem;
+    color: #ffffff;
+}
+.project-card-content p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+}
+
+/* Details Modal Images */
+.modal-graphic.image-contained {
+    padding: 0 !important;
+    overflow: hidden;
+    height: 350px;
+    border-bottom: 1px solid var(--border-glass);
+}
+.modal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* UPI Payment Checkout UI */
+.upi-qr-wrapper {
+    width: 180px;
+    height: 180px;
+    margin: 1.5rem auto;
+    background: #0B0B0B;
+    border: 2px solid var(--border-glass-active);
+    padding: 10px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-glow);
+}
+.upi-qr-svg {
+    width: 100%;
+    height: 100%;
+}
+.upi-details-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--border-radius-sm);
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.upi-method {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+.upi-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.upi-badge.phonepe {
+    background: rgba(102, 51, 153, 0.2);
+    border: 1px solid rgba(102, 51, 153, 0.4);
+    color: #a855f7;
+}
+.upi-badge.gpay {
+    background: rgba(66, 133, 244, 0.2);
+    border: 1px solid rgba(66, 133, 244, 0.4);
+    color: #4285f4;
+}
+.upi-phone {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+.upi-phone strong {
+    color: #ffffff;
+    font-size: 1.15rem;
+    margin-left: 0.4rem;
+}
+.payment-instructions {
+    background: rgba(37, 211, 102, 0.05);
+    border: 1px solid rgba(37, 211, 102, 0.15);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* Typography Overrides */
+h1, h2, h3, h4 {
+    font-weight: 600;
+}
+.nav-logo {
+    font-family: var(--font-luxury), var(--font-heading) !important;
+    letter-spacing: 0.05em;
+}
+
+/* Category adjustments for store products list */
+.catalog-item-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition-smooth);
+}
+.catalog-art-wrapper {
+    background: rgba(15, 15, 15, 0.5);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--border-radius-sm);
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+    cursor: pointer;
+    overflow: hidden;
+    color: var(--color-primary);
+}
+.catalog-art-wrapper svg {
+    width: 80px;
+    height: 80px;
+    transition: var(--transition-smooth);
+}
+.catalog-art-wrapper:hover svg {
+    color: var(--color-accent);
+    transform: scale(1.05);
+}
+.catalog-price {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 1.2rem;
 }

@@ -1,43 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- HERO SECTION -->
-<section class="section hero-section" id="home">
-    <div class="container hero-container">
-        <div class="hero-content">
-            <span class="badge hero-badge">Open for Collaboration</span>
-            <h1 class="hero-title">
-                Hi, I'm <span class="gradient-text">Abhinay</span>
-            </h1>
-            <h2 class="hero-subtitle">
-                I design & engineer <span id="typing-text" class="cursor-typing"></span>
-            </h2>
-            <p class="hero-description">
-                A passionate Full-Stack Engineer creating premium-quality, high-performance web systems. Explore my working projects in this live dashboard, including real-time tools, catalogs, and blogging features.
-            </p>
-            <div class="hero-actions">
-                <a href="#projects" class="btn btn-primary">
-                    <i class='bx bx-code-alt'></i> View Projects
-                </a>
-                <a href="#contact" class="btn btn-secondary">
-                    <i class='bx bx-envelope'></i> Let's Talk
-                </a>
-            </div>
-        </div>
-        <div class="hero-visual">
-            <div class="tech-stack-sphere">
-                <div class="floating-tech html" title="HTML5"><i class='bx bxl-html5'></i></div>
-                <div class="floating-tech css" title="CSS3"><i class='bx bxl-css3'></i></div>
-                <div class="floating-tech js" title="JavaScript"><i class='bx bxl-javascript'></i></div>
-                <div class="floating-tech python" title="Python"><i class='bx bxl-python'></i></div>
-                <div class="floating-tech flask" title="Flask"><i class='bx bxs-file-code'></i></div>
-                <div class="floating-tech sql" title="SQLite"><i class='bx bxs-data'></i></div>
-                <div class="central-core">
-                    <div class="core-inner">
-                        <i class='bx bx-bracket'></i>
-                    </div>
-                </div>
-            </div>
+<!-- CINEMATIC HERO SECTION -->
+<section class="section hero-section cinematic" id="home">
+    <video class="hero-video-bg" autoplay loop muted playsinline>
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-sports-car-driving-in-the-night-41584-large.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay-dark"></div>
+    
+    <div class="hero-content-cinematic">
+        <!-- SVG Carbon Crown Logo -->
+        <svg class="hero-logo-crown" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="fill: var(--color-primary); width: 90px; height: 90px;">
+            <path d="M50 15 L62 38 L88 30 L80 65 L20 65 L12 30 L38 38 Z" />
+            <path d="M25 72 L75 72 L75 78 L25 78 Z" />
+            <path d="M15 85 C30 82, 45 80, 50 80 C55 80, 70 82, 85 85 C80 87, 75 88, 50 88 C25 88, 20 87, 15 85 Z" />
+        </svg>
+        <h1 style="font-family: var(--font-luxury), serif;">
+            Capturing Horsepower.<br><span class="gradient-text">Creating Art.</span>
+        </h1>
+        <h2>
+            Cinematics &bull; <span id="typing-text" class="cursor-typing"></span>
+        </h2>
+        <p>
+            Carbon Cinema is a boutique visual production house capturing high-end hypercars, luxury vehicles, and elite superbikes in dramatic, cinema-grade compositions.
+        </p>
+        <div class="hero-actions">
+            <a href="#projects" class="btn btn-primary">
+                <i class='bx bx-images'></i> View Gallery
+            </a>
+            <a href="#contact" class="btn btn-secondary">
+                <i class='bx bx-calendar-event'></i> Book a Shoot
+            </a>
         </div>
     </div>
 </section>
@@ -46,98 +39,99 @@
 <section class="metrics-bar">
     <div class="container metrics-container">
         <div class="metric-card">
-            <h3>4</h3>
-            <p>Live Applications</p>
+            <h3>150+</h3>
+            <p>Shoots Completed</p>
         </div>
         <div class="metric-card">
-            <h3>1</h3>
-            <p>Unified Server</p>
+            <h3>12M+</h3>
+            <p>Reel Views</p>
         </div>
         <div class="metric-card">
-            <h3>SQLite</h3>
-            <p>Database Engine</p>
+            <h3>4K HDR</h3>
+            <p>Cinematic Standard</p>
         </div>
         <div class="metric-card">
             <h3>100%</h3>
-            <p>Vanilla Client</p>
+            <p>Satisfied Owners</p>
         </div>
     </div>
 </section>
 
-<!-- PROJECTS SECTION -->
+<!-- PORTFOLIO SHOWCASE GRID SECTION -->
 <section class="section projects-section" id="projects">
     <div class="container">
         <div class="section-header">
-            <span class="section-tag">Interactive Portfolio</span>
-            <h2 class="section-title">Built-In Applications</h2>
-            <p class="section-desc">Each of these projects is fully functional, reading and writing to the central portfolio database.</p>
+            <span class="section-tag">Featured Works</span>
+            <h2 class="section-title" style="font-family: var(--font-luxury), serif;">Automotive Gallery</h2>
+            <p class="section-desc">Filter through our high-contrast catalog of supercar launches, luxury rolling shots, and trackday captures.</p>
         </div>
         
         <!-- Filter Category Tabs -->
         <div class="project-filters">
-            <button class="filter-btn active" data-filter="all">All Projects</button>
-            <button class="filter-btn" data-filter="Frontend">Frontend Only</button>
-            <button class="filter-btn" data-filter="Backend">Backend / API</button>
-            <button class="filter-btn" data-filter="Fullstack">Full-Stack Hubs</button>
+            <button class="filter-btn active" data-filter="all">All Showcase</button>
+            <button class="filter-btn" data-filter="Supercars">Supercars</button>
+            <button class="filter-btn" data-filter="Luxury Cars">Luxury Cars</button>
+            <button class="filter-btn" data-filter="Superbikes">Superbikes</button>
+            <button class="filter-btn" data-filter="Cinematic Reels">Cinematic Reels</button>
         </div>
         
         <!-- Project Card Grid -->
         <div class="projects-grid" id="projectsGrid">
             <!-- Loaded dynamically by portfolio.js -->
             <div class="loading-spinner">
-                <i class='bx bx-loader-alt bx-spin'></i> Loading Projects Database...
+                <i class='bx bx-loader-alt bx-spin'></i> Querying studio archives...
             </div>
         </div>
     </div>
 </section>
 
-<!-- SKILLS SECTION -->
+<!-- STUDIO GEAR & EQUIPMENT SECTION -->
 <section class="section skills-section" id="skills">
     <div class="container">
         <div class="section-header">
-            <span class="section-tag">Core Capabilities</span>
-            <h2 class="section-title">Technical Expertise</h2>
-            <p class="section-desc">A detailed look at my engineering proficiency across design and logic structures.</p>
+            <span class="section-tag">Behind the Scenes</span>
+            <h2 class="section-title" style="font-family: var(--font-luxury), serif;">Our Weapons of Choice</h2>
+            <p class="section-desc">We leverage industry-leading cinema gear, optical lenses, and tracking rigs to deliver raw, pin-sharp details.</p>
         </div>
         
         <div class="skills-grid" id="skillsGrid">
             <!-- Categories loaded dynamically by portfolio.js -->
             <div class="skills-category-card card">
                 <div class="category-header">
-                    <i class='bx bx-laptop'></i>
-                    <h3>Frontend Development</h3>
+                    <i class='bx bx-camera'></i>
+                    <h3>Camera Systems</h3>
                 </div>
-                <div class="skills-list" id="skills-Frontend">
+                <div class="skills-list" id="skills-Cameras">
                     <!-- Loaded dynamically -->
                 </div>
             </div>
             
             <div class="skills-category-card card">
                 <div class="category-header">
-                    <i class='bx bx-server'></i>
-                    <h3>Backend Architecture</h3>
+                    <i class='bx bx-aperture'></i>
+                    <h3>Optics & Glass</h3>
                 </div>
-                <div class="skills-list" id="skills-Backend">
+                <div class="skills-list" id="skills-Lenses">
                     <!-- Loaded dynamically -->
                 </div>
             </div>
 
             <div class="skills-category-card card">
                 <div class="category-header">
-                    <i class='bx bx-data'></i>
-                    <h3>Database Systems</h3>
+                    <i class='bx bx-anchor'></i>
+                    <h3>Rigging & Gimbal</h3>
                 </div>
-                <div class="skills-list" id="skills-Database">
+                <div class="skills-list" id="skills-Rigging">
                     <!-- Loaded dynamically -->
                 </div>
             </div>
 
             <div class="skills-category-card card">
                 <div class="category-header">
-                    <i class='bx bx-wrench'></i>
-                    <h3>DevOps & Tooling</h3>
+                    <i class='bx bx-sun'></i>
+                    <h3>Lighting & Studio</h3>
                 </div>
-                <div class="skills-list" id="skills-Tools">
+                <div class="skills-list" id="skills-Lighting">
                     <!-- Loaded dynamically -->
                 </div>
             </div>
@@ -145,40 +139,47 @@
     </div>
 </section>
 
-<!-- CONTACT SECTION -->
+<!-- CONTACT BOOKING SECTION -->
 <section class="section contact-section" id="contact">
     <div class="container">
         <div class="section-header">
-            <span class="section-tag">Get In Touch</span>
-            <h2 class="section-title">Start A Conversation</h2>
-            <p class="section-desc">Submit a message below. It will write directly to the database and can be read by the administrator in the Admin Panel.</p>
+            <span class="section-tag">Secure Your Session</span>
+            <h2 class="section-title" style="font-family: var(--font-luxury), serif;">Book A Production</h2>
+            <p class="section-desc">Submit your shoot requirements below. It will write directly to the studio schedule, where our director will get back to you.</p>
         </div>
         
         <div class="contact-layout">
             <div class="contact-info card">
-                <h3>Contact Details</h3>
-                <p>Feel free to reach out via the secure form, or connect directly through standard development handles.</p>
+                <h3>Studio Relations</h3>
+                <p>Have an exotic supercar, a custom bike build, or a track day event? Reach out to arrange a cinematic capture session.</p>
                 
                 <div class="contact-details-list">
                     <div class="contact-detail-item">
-                        <i class='bx bx-mail-send'></i>
+                        <i class='bx bxl-whatsapp' style="color: #25D366; background: rgba(37, 211, 102, 0.1); border-color: rgba(37, 211, 102, 0.2);"></i>
                         <div>
-                            <h4>Email</h4>
-                            <p><a href="mailto:abhinay@example.com">abhinay@example.com</a></p>
+                            <h4>WhatsApp / Phone</h4>
+                            <p><a href="https://wa.me/918121245333" target="_blank">+91 81212 45333</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-detail-item">
+                        <i class='bx bx-envelope'></i>
+                        <div>
+                            <h4>Booking Email</h4>
+                            <p><a href="mailto:tilaksontana59@gmail.com">tilaksontana59@gmail.com</a></p>
                         </div>
                     </div>
                     <div class="contact-detail-item">
                         <i class='bx bx-map'></i>
                         <div>
-                            <h4>Location</h4>
-                            <p>India (IST)</p>
+                            <h4>Coverage Areas</h4>
+                            <p>Global (Base: India / Dubai)</p>
                         </div>
                     </div>
                     <div class="contact-detail-item">
-                        <i class='bx bx-briefcase-alt-2'></i>
+                        <i class='bx bx-qr-scan'></i>
                         <div>
-                            <h4>Role Status</h4>
-                            <p>Available for Full-time hire & Contract</p>
+                            <h4>UPI Payment Setup</h4>
+                            <p>Direct bookings supported via GPay/PhonePe</p>
                         </div>
                     </div>
                 </div>
@@ -190,58 +191,98 @@
                         <label for="name">Your Name</label>
                         <div class="input-wrapper">
                             <i class='bx bx-user'></i>
-                            <input type="text" id="name" required placeholder="John Doe">
+                            <input type="text" id="name" required placeholder="Rohit Sharma">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="email">Your Email</label>
                         <div class="input-wrapper">
                             <i class='bx bx-envelope'></i>
-                            <input type="email" id="email" required placeholder="john@example.com">
+                            <input type="email" id="email" required placeholder="rohit@example.com">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="vehicle_details">Vehicle Make & Model</label>
+                        <div class="input-wrapper">
+                            <i class='bx bx-car'></i>
+                            <input type="text" id="vehicle_details" required placeholder="e.g. Porsche 911 GT3 RS / Ducati Panigale V4S">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="shoot_type">Shoot Type</label>
+                        <div class="input-wrapper">
+                            <i class='bx bx-camera'></i>
+                            <select id="shoot_type" required style="padding-left: 2.8rem; height: 100%;">
+                                <option value="" disabled selected>Select shoot category</option>
+                                <option value="Automotive Photography (Static/Details)">Automotive Photography (Static/Details)</option>
+                                <option value="Automotive Cinematics (4K Reels/Video)">Automotive Cinematics (4K Reels/Video)</option>
+                                <option value="Trackside High-Speed Rollers">Trackside High-Speed Rollers</option>
+                                <option value="Drone Aerial Canyon Sessions">Drone Aerial Canyon Sessions</option>
+                                <option value="Studio Spotlight & Lightpaint">Studio Spotlight & Lightpaint</option>
+                                <option value="Commercial Dealer Campaign">Commercial Dealer Campaign</option>
+                                <option value="Full Cinematic Campaign (Photo + Video)">Full Cinematic Campaign (Photo + Video)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="booking_date">Preferred Shoot Date</label>
+                        <div class="input-wrapper">
+                            <i class='bx bx-calendar'></i>
+                            <input type="date" id="booking_date" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking_slot">Preferred Time Slot</label>
+                        <div class="input-wrapper">
+                            <i class='bx bx-time'></i>
+                            <select id="booking_slot" required style="padding-left: 2.8rem; height: 100%;">
+                                <option value="" disabled selected>Select time slot</option>
+                                <option value="Morning Golden Hour (05:30 AM - 08:30 AM)">Morning Golden Hour (05:30 AM - 08:30 AM)</option>
+                                <option value="Midday Studio Session (11:00 AM - 03:00 PM)">Midday Studio Session (11:00 AM - 03:00 PM)</option>
+                                <option value="Evening Sunset Session (04:30 PM - 07:00 PM)">Evening Sunset Session (04:30 PM - 07:00 PM)</option>
+                                <option value="Midnight Street Rollers (09:30 PM - 01:00 AM)">Midnight Street Rollers (09:30 PM - 01:00 AM)</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="subject">Subject</label>
-                    <div class="input-wrapper">
-                        <i class='bx bx-text'></i>
-                        <input type="text" id="subject" required placeholder="Project proposal, collaboration...">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" required rows="5" placeholder="Write your message details here..."></textarea>
+                    <label for="message">Shoot Location & Specific Requirements</label>
+                    <textarea id="message" required rows="3" placeholder="Mention preferred track/studio locations, and specific angles or rollers you need..."></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block" id="contactSubmitBtn">
-                    <span class="btn-text"><i class='bx bx-paper-plane'></i> Send Message</span>
-                    <span class="btn-spinner"><i class='bx bx-loader-alt bx-spin'></i> Sending...</span>
+                    <span class="btn-text"><i class='bx bx-calendar-check'></i> Send Booking Request</span>
+                    <span class="btn-spinner"><i class='bx bx-loader-alt bx-spin'></i> Submitting...</span>
                 </button>
             </form>
         </div>
     </div>
 </section>
 
-<!-- PROJECT DETAIL OVERLAY MODAL -->
+<!-- PORTFOLIO DETAIL OVERLAY MODAL -->
 <div class="modal-overlay" id="projectModal">
     <div class="modal-container project-modal-container card">
         <button class="modal-close-btn" id="modalCloseBtn"><i class='bx bx-x'></i></button>
         <div class="modal-body">
-            <div class="modal-graphic" id="modalGraphic">
-                <!-- SVG Icon loaded dynamically -->
+            <div class="modal-graphic image-contained" id="modalGraphic">
+                <!-- Image loaded dynamically -->
             </div>
             <div class="modal-content">
                 <span class="badge" id="modalCategory">Category</span>
                 <h3 id="modalTitle">Project Title</h3>
                 <p id="modalDescription" class="modal-desc">Detailed descriptions go here...</p>
                 <div class="modal-tech-tags" id="modalTechTags">
-                    <!-- Tech tags loaded dynamically -->
+                    <!-- Gear tags loaded dynamically -->
                 </div>
                 <div class="modal-actions">
                     <a href="#" class="btn btn-primary" id="modalLiveLink" target="_blank">
-                        <i class='bx bx-launch'></i> Open Live App
+                        <i class='bx bx-expand-alt'></i> View Full Image
                     </a>
-                    <a href="#" class="btn btn-secondary" id="modalCodeLink" target="_blank">
-                        <i class='bx bxl-github'></i> View Repository
+                    <a href="https://wa.me/918121245333" class="btn btn-secondary" target="_blank">
+                        <i class='bx bxl-whatsapp'></i> Inquire via WhatsApp
                     </a>
                 </div>
             </div>

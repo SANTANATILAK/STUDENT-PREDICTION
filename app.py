@@ -51,6 +51,19 @@ def blog_page():
 def admin_page():
     return render_template('admin.html')
 
+@app.route('/sw.js')
+def serve_sw():
+    response = app.send_static_file('sw.js')
+    response.headers['Content-Type'] = 'application/javascript'
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
+
+@app.route('/manifest.json')
+def serve_manifest():
+    response = app.send_static_file('manifest.json')
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
 
 # ==========================================
 # AUTHENTICATION API
@@ -115,8 +128,51 @@ def api_logout():
     session.clear()
     return jsonify({'message': 'Logged out successfully'})
 
+@app.route('/api/auth/google', methods=['POST'])
+def api_google_login():
+    data = request.get_json() or {}
+    credential = data.get('credential', '').strip()
+    email = data.get('email', '').strip()
+    name = data.get('name', '').strip()
+    
+    if credential:
+        import urllib.request
+        import json
+        try:
+            # Call Google's tokeninfo API to verify the credential ID token
+            url = f"https://oauth2.googleapis.com/tokeninfo?id_token={credential}"
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=5) as response:
+                token_info = json.loads(response.read().decode('utf-8'))
+                if 'error_description' in token_info:
+                    return jsonify({'error': f"Google verification failed: {token_info['error_description']}"}), 400
+                email = token_info.get('email', '').strip()
+                name = token_info.get('name', email.split('@')[0]).strip()
+        except Exception as e:
+            return jsonify({'error': f"Google token verification failed: {str(e)}"}), 400
+            
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+        
+    username = email.split('@')[0]
+    
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        import secrets
+        user = User(username=username, role='user')
+        user.set_password(secrets.token_hex(16))
+        db.session.add(user)
+        db.session.commit()
+        
+    session['user_id'] = user.id
+    session['username'] = user.username
+    session['role'] = user.role
+    
+    return jsonify({'message': 'Logged in with Google successfully', 'user': user.to_dict()})
+
 @app.route('/api/auth/status', methods=['GET'])
 def api_auth_status():
+    google_client_id = app.config.get('GOOGLE_CLIENT_ID', '')
     if 'user_id' in session:
         return jsonify({
             'authenticated': True,
@@ -124,9 +180,13 @@ def api_auth_status():
                 'id': session['user_id'],
                 'username': session['username'],
                 'role': session['role']
-            }
+            },
+            'google_client_id': google_client_id
         })
-    return jsonify({'authenticated': False})
+    return jsonify({
+        'authenticated': False,
+        'google_client_id': google_client_id
+    })
 
 
 # ==========================================
@@ -139,51 +199,125 @@ def get_skills():
 
 @app.route('/api/projects', methods=['GET'])
 def get_projects():
-    # We return a descriptive metadata JSON representing the 4 projects 
-    # being showcased within this system.
+    # We return a descriptive metadata JSON representing the luxury vehicle projects 
+    # being showcased within this photography portfolio.
     projects_list = [
         {
             'id': 1,
-            'title': 'Personal Portfolio Website',
-            'description': 'A stunning glassmorphic full-stack developer portfolio hub with custom HSL glowing accents and interactive micro-animations. Contains integrated dashboard control panels, feedback message viewers, and custom navigation matrices.',
-            'category': 'Fullstack',
-            'technologies': 'HTML5, CSS3 Variables, ES6 JavaScript, Python, Flask, SQLite',
-            'github_url': 'https://github.com/Abhinay-tech-stack/personal-portifolio',
-            'live_url': '/',
-            'image_url': 'portfolio'
+            'title': 'Lamborghini Huracán STO Sunset Session',
+            'description': 'A sunset rolling session capture and night city automotive cinematic focusing on the STO\'s aggressive lines, carbon-fiber aerodynamics, and raw V10 engine presence.',
+            'category': 'Supercars',
+            'technologies': 'Sony FX3, Tilta Hydra Car Mount, Profoto Studio Lighting, 4K Cinema Capture',
+            'github_url': 'https://instagram.com',
+            'live_url': '/static/images/lambo_hero.png',
+            'image_url': 'lambo_hero'
         },
         {
             'id': 2,
-            'title': 'Task Management Application',
-            'description': 'A dashboard web app for tasks with user authentication. Supports complete CRUD operations, status filtering, details editing, and due dates. Tasks are protected and dynamically fetched from the database per session.',
-            'category': 'Fullstack',
-            'technologies': 'Python, Flask-SQLAlchemy, SQLite, HTML5, Vanilla CSS, JS API Fetching',
-            'github_url': 'https://github.com/Abhinay-tech-stack/personal-portifolio',
-            'live_url': '/tasks',
-            'image_url': 'tasks'
+            'title': 'Ducati Panigale V4S Trackside Attack',
+            'description': 'High-speed trackside tracking and tight cornering action shots at BIC Circuit, capturing the red-and-gold superbike in its natural racing posture.',
+            'category': 'Superbikes',
+            'technologies': 'Sony FX3, DJI Ronin 2 Stabilizer, Sony G-Master 70-200mm, High-speed tracking vehicle',
+            'github_url': 'https://instagram.com',
+            'live_url': '/static/images/ducati_portfolio.png',
+            'image_url': 'ducati_portfolio'
         },
         {
             'id': 3,
-            'title': 'E-Commerce Web Application',
-            'description': 'A digital hardware storefront featuring detailed product catalogs, dynamic filter searching, item detail overlays, active shopping cart drawer (with quantity adjustment), and order submission with checkout panels.',
-            'category': 'Fullstack',
-            'technologies': 'Python, Flask, SQLite, Flexbox Styling, Client State Management, SVG Renderings',
-            'github_url': 'https://github.com/Abhinay-tech-stack/personal-portifolio',
-            'live_url': '/shop',
-            'image_url': 'shop'
+            'title': 'Porsche 911 GT3 RS Warehouse Studio',
+            'description': 'A dramatic industrial studio session highlighting the GT3 RS\'s extreme aerodynamics, custom gold wheels, and raw wing profile under warm spotlights.',
+            'category': 'Supercars',
+            'technologies': 'RED Komodo, Profoto Pro-11 Studio Pack, Zeiss Supreme Primes, Matte Studio Box',
+            'github_url': 'https://instagram.com',
+            'live_url': '/static/images/porsche_portfolio.png',
+            'image_url': 'porsche_portfolio'
         },
         {
             'id': 4,
-            'title': 'Blog Platform with Comments',
-            'description': 'An articles publication channel supporting post-reading and comment sections. Registered members can write new posts, edit, or delete them, while other visitors can write comments inserted instantly via REST hooks.',
-            'category': 'Fullstack',
-            'technologies': 'Flask, SQLAlchemy ORM, Glassmorphism Forms, Responsive Grid System, JavaScript Modules',
-            'github_url': 'https://github.com/Abhinay-tech-stack/personal-portifolio',
-            'live_url': '/blog',
-            'image_url': 'blog'
+            'title': 'Mercedes-AMG GT 63 S Midnight Run',
+            'description': 'Sleek, blacked-out rolling shot on wet highway pavement under yellow urban streetlights, blending motion blur with crisp reflections.',
+            'category': 'Luxury Cars',
+            'technologies': 'Leica M11, Summilux 35mm Prime, High-speed tracking chase car',
+            'github_url': 'https://instagram.com',
+            'live_url': '/static/images/amg_portfolio.png',
+            'image_url': 'amg_portfolio'
+        },
+        {
+            'id': 5,
+            'title': 'Ferrari SF90 Stradale Canyon Run',
+            'description': 'Sweeping canyon road tracking shots capturing the hybrid Ferrari hypercar in dynamic action during a golden dawn hour.',
+            'category': 'Supercars',
+            'technologies': 'RED Komodo, DJI Inspire 3 Drone, circular polarizers, DaVinci Resolve color grading',
+            'github_url': 'https://instagram.com',
+            'live_url': '/static/images/canyon_run.png',
+            'image_url': 'canyon_run'
+        },
+        {
+            'id': 6,
+            'title': 'High-Octane Cinematic Reels',
+            'description': 'A high-octane compile reel combining Lamborghini launches, Ferrari engine notes, and superbikes cornering at night. Styled in high contrast gold-and-black.',
+            'category': 'Cinematic Reels',
+            'technologies': 'RED Komodo, Sony FX3, DJI Inspire 3, Tilta Arm, DaVinci Resolve Studio',
+            'github_url': 'https://youtube.com',
+            'live_url': '/static/images/lambo_hero.png',
+            'image_url': 'lambo_hero'
         }
     ]
     return jsonify(projects_list)
+
+def send_booking_email(name, client_email, subject, message_body):
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    
+    # Read SMTP configuration from environment
+    smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
+    try:
+        smtp_port = int(os.environ.get('SMTP_PORT', 587))
+    except ValueError:
+        smtp_port = 587
+    smtp_user = os.environ.get('SMTP_USERNAME', '')
+    smtp_pass = os.environ.get('SMTP_PASSWORD', '')
+    
+    receiver_email = 'tilaksontana59@gmail.com'
+    
+    msg = MIMEMultipart()
+    msg['From'] = smtp_user if smtp_user else 'bookings@carboncinema.com'
+    msg['To'] = receiver_email
+    msg['Subject'] = f"[Carbon Cinema Booking] {subject}"
+    
+    body = f"""New Cinematic Shoot Booking Received!
+------------------------------------
+Client Name: {name}
+Client Email: {client_email}
+
+Details:
+{message_body}
+"""
+    msg.attach(MIMEText(body, 'plain'))
+    
+    if not smtp_user or not smtp_pass:
+        print("\n=== [MOCK EMAIL SENT TO tilaksontana59@gmail.com] ===")
+        print(f"Subject: {msg['Subject']}")
+        print(body)
+        print("=====================================================\n")
+        return False
+        
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_user, smtp_pass)
+        server.sendmail(msg['From'], receiver_email, msg.as_string())
+        server.quit()
+        print(f"Real SMTP Email sent successfully to {receiver_email}!")
+        return True
+    except Exception as e:
+        print(f"SMTP Email send failed: {str(e)}")
+        print("\n=== [FALLBACK: EMAIL DETAILS FOR tilaksontana59@gmail.com] ===")
+        print(f"Subject: {msg['Subject']}")
+        print(body)
+        print("============================================================\n")
+        return False
 
 @app.route('/api/contact', methods=['POST'])
 def submit_contact():
@@ -199,6 +333,9 @@ def submit_contact():
     msg = ContactMessage(name=name, email=email, subject=subject, message=message)
     db.session.add(msg)
     db.session.commit()
+    
+    # Send email notification
+    send_booking_email(name, email, subject, message)
     
     return jsonify({'message': 'Thank you! Your message has been received.', 'message_id': msg.id}), 201
 

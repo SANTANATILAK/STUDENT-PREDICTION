@@ -3,54 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abhinay | Full-Stack Portfolio Hub</title>
+    <title>Carbon Cinema | Luxury Automotive Photography & Films</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Boxicons (Premium web icons) -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     
+    <!-- Google Identity Services (GSI) for Sign In with Google -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Progressive Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#D4AF37">
+    <link rel="apple-touch-icon" href="/static/images/logo_192.png">
+
     <!-- Custom Style Sheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <!-- Background Glow Elements -->
-    <div class="blob-glow blob-1"></div>
-    <div class="blob-glow blob-2"></div>
-    <div class="blob-glow blob-3"></div>
+    <div class="blob-glow blob-1" style="background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);"></div>
+    <div class="blob-glow blob-2" style="background: radial-gradient(circle, var(--color-secondary) 0%, transparent 70%);"></div>
+    <div class="blob-glow blob-3" style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);"></div>
 
     <!-- Header Navigation -->
     <header class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo">
-                <span class="logo-accent">&lt;</span>Abhinay<span class="logo-accent"> /&gt;</span>
+                <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width: 34px; height: 34px; margin-right: 10px; fill: var(--color-primary);">
+                    <path d="M50 15 L62 38 L88 30 L80 65 L20 65 L12 30 L38 38 Z" />
+                    <path d="M25 72 L75 72 L75 78 L25 78 Z" />
+                    <path d="M15 85 C30 82, 45 80, 50 80 C55 80, 70 82, 85 85 C80 87, 75 88, 50 88 C25 88, 20 87, 15 85 Z" />
+                </svg>
+                <span>Carbon<strong style="color: var(--color-primary); font-weight: 700;">Cinema</strong></span>
             </a>
             
             <nav class="nav-menu" id="navMenu">
                 <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
-                    <i class='bx bx-home-alt nav-icon'></i>Portfolio
+                    <i class='bx bx-camera nav-icon'></i>Showcase
                 </a>
                 <a href="/tasks" class="nav-link {% if request.path == '/tasks' %}active{% endif %}">
-                    <i class='bx bx-task nav-icon'></i>Tasks
+                    <i class='bx bx-play-circle nav-icon'></i>Production Hub
                 </a>
                 <a href="/shop" class="nav-link {% if request.path == '/shop' %}active{% endif %}">
-                    <i class='bx bx-shopping-bag nav-icon'></i>Shop
+                    <i class='bx bx-store-alt nav-icon'></i>Print Shop
                 </a>
                 <a href="/blog" class="nav-link {% if request.path == '/blog' %}active{% endif %}">
-                    <i class='bx bx-news nav-icon'></i>Blog
+                    <i class='bx bx-book-open nav-icon'></i>Stories
                 </a>
                 <a href="/admin" class="nav-link {% if request.path == '/admin' %}active{% endif %}">
-                    <i class='bx bx-slider-alt nav-icon'></i>Admin
+                    <i class='bx bx-slider-alt nav-icon'></i>Studio Portal
                 </a>
             </nav>
             
             <div class="nav-auth" id="navAuth">
                 <!-- Session status loaded dynamically by main.js -->
                 <button class="btn btn-primary btn-sm login-btn" onclick="window.location.href='/tasks'">
-                    <i class='bx bx-log-in'></i> Login
+                    <i class='bx bx-log-in'></i> Client Login
                 </button>
             </div>
             
@@ -73,31 +86,39 @@
         <div class="footer-container">
             <div class="footer-brand">
                 <a href="/" class="nav-logo">
-                    <span class="logo-accent">&lt;</span>Abhinay<span class="logo-accent"> /&gt;</span>
+                    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width: 30px; height: 30px; margin-right: 8px; fill: var(--color-primary);">
+                        <path d="M50 15 L62 38 L88 30 L80 65 L20 65 L12 30 L38 38 Z" />
+                        <path d="M25 72 L75 72 L75 78 L25 78 Z" />
+                        <path d="M15 85 C30 82, 45 80, 50 80 C55 80, 70 82, 85 85 C80 87, 75 88, 50 88 C25 88, 20 87, 15 85 Z" />
+                    </svg>
+                    <span>Carbon<strong style="color: var(--color-primary);">Cinema</strong></span>
                 </a>
-                <p>Building high-performance, visually gorgeous web systems with modern backend stacks.</p>
+                <p>Capturing horsepower, creating art. Premium luxury supercar and superbike photography & cinematic reels.</p>
+                <p style="margin-top: 1rem; color: var(--color-primary); font-weight: 500;">
+                    <i class='bx bx-phone' style="vertical-align: middle;"></i> +91 81212 45333
+                </p>
             </div>
             <div class="footer-links">
-                <h4>Explore Hub</h4>
+                <h4>Explore Studio</h4>
                 <ul>
-                    <li><a href="/">Portfolio Showcase</a></li>
-                    <li><a href="/tasks">Task Tracker</a></li>
-                    <li><a href="/shop">Storefront Hub</a></li>
-                    <li><a href="/blog">Articles & Blog</a></li>
+                    <li><a href="/">Featured Showcase</a></li>
+                    <li><a href="/tasks">Shoot Tracker</a></li>
+                    <li><a href="/shop">Print & Preset Store</a></li>
+                    <li><a href="/blog">Behind the Lens</a></li>
                 </ul>
             </div>
             <div class="footer-socials">
-                <h4>Social Connection</h4>
+                <h4>Connect With Us</h4>
                 <div class="social-icons">
-                    <a href="https://github.com/Abhinay-tech-stack/personal-portifolio" target="_blank" aria-label="GitHub"><i class='bx bxl-github'></i></a>
-                    <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class='bx bxl-linkedin'></i></a>
-                    <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class='bx bxl-twitter'></i></a>
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class='bx bxl-instagram'></i></a>
+                    <a href="https://wa.me/918121245333" target="_blank" aria-label="WhatsApp"><i class='bx bxl-whatsapp'></i></a>
+                    <a href="mailto:tilaksontana59@gmail.com" aria-label="Email"><i class='bx bx-envelope'></i></a>
                 </div>
-                <p class="admin-entry-link">System Operator: <a href="/admin">Dashboard Portal</a></p>
+                <p class="admin-entry-link">Studio Operator: <a href="/admin">Portal Login</a></p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Abhinay. Designed with custom CSS variables & Flask. All Rights Reserved.</p>
+            <p>&copy; 2026 Carbon Cinema. All rights reserved. Premium Black & Gold Theme.</p>
         </div>
     </footer>
 

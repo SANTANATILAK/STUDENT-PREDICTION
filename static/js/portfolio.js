@@ -1,8 +1,8 @@
-// Skills & Projects Hub Logic
+// Carbon Cinema - Showcase & Studio Relations Logic
 document.addEventListener('DOMContentLoaded', () => {
     initTypewriter();
-    loadSkills();
-    loadProjects();
+    loadStudioGear();
+    loadGalleryItems();
     initContactForm();
     initModalEvents();
 });
@@ -14,7 +14,7 @@ function initTypewriter() {
     const target = document.getElementById('typing-text');
     if (!target) return;
     
-    const words = ["scalable web APIs", "responsive UI views", "relational schemas", "full-stack systems"];
+    const words = ["Lamborghini launches", "Ferrari rolling shots", "superbike trackdays", "night city cinematics"];
     let wordIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
@@ -48,15 +48,15 @@ function initTypewriter() {
 }
 
 // ==========================================
-// SKILLS LOAD & ANIMATION
+// GEAR (SKILLS) LOAD & ANIMATION
 // ==========================================
-async function loadSkills() {
+async function loadStudioGear() {
     try {
         const response = await fetch('/api/skills');
-        const skills = await response.json();
+        const gears = await response.json();
         
-        // Group skills by category
-        const categories = ['Frontend', 'Backend', 'Database', 'Tools'];
+        // Group gear by category
+        const categories = ['Cameras', 'Lenses', 'Rigging', 'Lighting'];
         
         categories.forEach(cat => {
             const listContainer = document.getElementById(`skills-${cat}`);
@@ -64,104 +64,101 @@ async function loadSkills() {
             
             listContainer.innerHTML = '';
             
-            const catSkills = skills.filter(s => s.category === cat);
-            if (catSkills.length === 0) {
-                listContainer.innerHTML = `<p class="text-dark">No skills added yet.</p>`;
+            const catGear = gears.filter(g => g.category === cat);
+            if (catGear.length === 0) {
+                listContainer.innerHTML = `<p class="text-muted">No gear records loaded.</p>`;
                 return;
             }
             
-            catSkills.forEach(skill => {
+            catGear.forEach(gear => {
                 const item = document.createElement('div');
                 item.className = 'skill-item-bar';
                 item.innerHTML = `
                     <div class="skill-label-row">
-                        <span>${skill.name}</span>
-                        <span>${skill.proficiency}%</span>
+                        <span>${gear.name}</span>
+                        <span>${gear.proficiency}%</span>
                     </div>
                     <div class="skill-progress-bg">
-                        <div class="skill-progress-fill" id="progress-bar-${skill.id}" style="width: 0%;"></div>
+                        <div class="skill-progress-fill" id="progress-bar-${gear.id}" style="width: 0%; background: var(--gradient-hero);"></div>
                     </div>
                 `;
                 listContainer.appendChild(item);
                 
-                // Animate expansion slightly after creation
+                // Animate progress bar slightly after creation
                 setTimeout(() => {
-                    const fill = document.getElementById(`progress-bar-${skill.id}`);
-                    if (fill) fill.style.width = `${skill.proficiency}%`;
+                    const fill = document.getElementById(`progress-bar-${gear.id}`);
+                    if (fill) fill.style.width = `${gear.proficiency}%`;
                 }, 100);
             });
         });
     } catch (error) {
-        console.error('Error fetching skills:', error);
+        console.error('Error fetching gear catalog:', error);
     }
 }
 
 // ==========================================
-// PROJECTS DATABASE LOAD & CRUD SHOWCASE
+// GALLERY (PROJECTS) LOAD & FILTER
 // ==========================================
-let allProjects = [];
+let allGalleryItems = [];
 
-async function loadProjects() {
+async function loadGalleryItems() {
     const grid = document.getElementById('projectsGrid');
     if (!grid) return;
     
     try {
         const response = await fetch('/api/projects');
-        allProjects = await response.json();
+        allGalleryItems = await response.json();
         
-        renderProjects(allProjects);
+        renderGallery(allGalleryItems);
         initFilters();
     } catch (error) {
-        console.error('Error loading projects:', error);
-        grid.innerHTML = `<p class="text-center danger-text">Failed to query projects database.</p>`;
+        console.error('Error loading gallery:', error);
+        grid.innerHTML = `<p class="text-center danger-text">Failed to query studio archives.</p>`;
     }
 }
 
-function renderProjects(projects) {
+function renderGallery(items) {
     const grid = document.getElementById('projectsGrid');
     if (!grid) return;
     
     grid.innerHTML = '';
     
-    if (projects.length === 0) {
-        grid.innerHTML = `<p class="text-center text-muted">No projects correspond to this filter.</p>`;
+    if (items.length === 0) {
+        grid.innerHTML = `<p class="text-center text-muted">No shots correspond to this filter.</p>`;
         return;
     }
     
-    projects.forEach(project => {
+    items.forEach(item => {
         const card = document.createElement('div');
-        card.className = 'card project-card';
-        card.setAttribute('data-category', project.category);
+        card.className = 'project-card';
+        card.setAttribute('data-category', item.category);
         
-        // Pick representation icon
-        let iconHtml = "<i class='bx bx-code-block'></i>";
-        if (project.image_url === 'portfolio') iconHtml = "<i class='bx bx-desktop'></i>";
-        if (project.image_url === 'tasks') iconHtml = "<i class='bx bx-task'></i>";
-        if (project.image_url === 'shop') iconHtml = "<i class='bx bx-store'></i>";
-        if (project.image_url === 'blog') iconHtml = "<i class='bx bx-chat'></i>";
-        
-        const techTags = project.technologies.split(',').map(t => `<span class="tech-tag">${t.trim()}</span>`).join('');
+        const techTags = item.technologies.split(',').map(t => `<span class="tech-tag">${t.trim()}</span>`).join('');
         
         card.innerHTML = `
-            <div class="project-top-row">
-                <div class="project-icon-art">
-                    ${iconHtml}
+            <div class="project-card-image-wrap">
+                <img src="/static/images/${item.image_url}.png" alt="${item.title}" class="project-card-img" onerror="this.src='/static/images/lambo_hero.png'">
+            </div>
+            <div class="project-card-content">
+                <div class="project-top-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+                    <span class="badge" style="border-color: var(--color-primary); color: var(--color-primary);">${item.category}</span>
                 </div>
-                <span class="badge">${project.category}</span>
-            </div>
-            <h3>${project.title}</h3>
-            <p>${project.description}</p>
-            <div class="project-techs-row">
-                ${techTags}
-            </div>
-            <div class="project-footer-row">
-                <span class="learn-more-link">Learn More <i class='bx bx-right-arrow-alt'></i></span>
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+                <div class="project-techs-row" style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom: 1.2rem;">
+                    ${techTags}
+                </div>
+                <div class="project-footer-row" style="border-top: 1px solid var(--border-glass); padding-top: 0.8rem;">
+                    <span class="learn-more-link" style="color: var(--color-primary); font-size: 0.9rem; font-weight: 600; display:flex; align-items:center; gap:0.3rem;">
+                        View Shoot <i class='bx bx-right-arrow-alt'></i>
+                    </span>
+                </div>
             </div>
         `;
         
         // Add details click listener
         card.addEventListener('click', () => {
-            openProjectModal(project);
+            openProjectModal(item);
         });
         
         grid.appendChild(card);
@@ -178,49 +175,42 @@ function initFilters() {
             
             const filter = btn.getAttribute('data-filter');
             if (filter === 'all') {
-                renderProjects(allProjects);
+                renderGallery(allGalleryItems);
             } else {
-                const filtered = allProjects.filter(p => p.category === filter);
-                renderProjects(filtered);
+                const filtered = allGalleryItems.filter(p => p.category === filter);
+                renderGallery(filtered);
             }
         });
     });
 }
 
 // ==========================================
-// PROJECT DETAILS MODAL
+// PORTFOLIO DETAILS MODAL
 // ==========================================
-function openProjectModal(project) {
+function openProjectModal(item) {
     const modal = document.getElementById('projectModal');
     const title = document.getElementById('modalTitle');
     const category = document.getElementById('modalCategory');
     const desc = document.getElementById('modalDescription');
     const techTags = document.getElementById('modalTechTags');
     const liveLink = document.getElementById('modalLiveLink');
-    const codeLink = document.getElementById('modalCodeLink');
     const graphic = document.getElementById('modalGraphic');
     
     if (!modal) return;
     
     // Set contents
-    title.textContent = project.title;
-    category.textContent = project.category;
-    desc.textContent = project.description;
+    title.textContent = item.title;
+    category.textContent = item.category;
+    desc.textContent = item.description;
     
-    // Set graphics
-    let iconHtml = "<i class='bx bx-code-block' style='font-size: 5rem; color: var(--color-primary);'></i>";
-    if (project.image_url === 'portfolio') iconHtml = "<i class='bx bx-desktop' style='font-size: 5rem; color: var(--color-primary);'></i>";
-    if (project.image_url === 'tasks') iconHtml = "<i class='bx bx-task' style='font-size: 5rem; color: var(--color-primary);'></i>";
-    if (project.image_url === 'shop') iconHtml = "<i class='bx bx-store' style='font-size: 5rem; color: var(--color-accent);'></i>";
-    if (project.image_url === 'blog') iconHtml = "<i class='bx bx-chat' style='font-size: 5rem; color: var(--color-secondary);'></i>";
-    graphic.innerHTML = iconHtml;
+    // Inject containment image
+    graphic.innerHTML = `<img src="/static/images/${item.image_url}.png" alt="${item.title}" class="modal-img" onerror="this.src='/static/images/lambo_hero.png'">`;
     
     // Tech list tags
-    techTags.innerHTML = project.technologies.split(',').map(t => `<span class="tech-tag">${t.trim()}</span>`).join('');
+    techTags.innerHTML = item.technologies.split(',').map(t => `<span class="tech-tag">${t.trim()}</span>`).join('');
     
-    // Links
-    liveLink.href = project.live_url;
-    codeLink.href = project.github_url;
+    // Set full-screen link
+    liveLink.href = item.live_url;
     
     // Show modal
     modal.classList.add('active');
@@ -242,7 +232,7 @@ function initModalEvents() {
 }
 
 // ==========================================
-// CONTACT MESSAGE SUBMISSION
+// CONTACT / BOOKING MESSAGE SUBMISSION
 // ==========================================
 function initContactForm() {
     const form = document.getElementById('contactForm');
@@ -253,10 +243,17 @@ function initContactForm() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const name = document.getElementById('name').value.strip ? document.getElementById('name').value.trim() : document.getElementById('name').value;
-        const email = document.getElementById('email').value.strip ? document.getElementById('email').value.trim() : document.getElementById('email').value;
-        const subject = document.getElementById('subject').value.strip ? document.getElementById('subject').value.trim() : document.getElementById('subject').value;
-        const message = document.getElementById('message').value.strip ? document.getElementById('message').value.trim() : document.getElementById('message').value;
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const vehicle = document.getElementById('vehicle_details').value.trim();
+        const shootType = document.getElementById('shoot_type').value;
+        const bookingDate = document.getElementById('booking_date').value;
+        const bookingSlot = document.getElementById('booking_slot').value;
+        const msgText = document.getElementById('message').value.trim();
+        
+        // Pack custom booking parameters into subject and message fields
+        const subject = `Shoot Booking: ${shootType} - ${vehicle}`;
+        const message = `Client Vehicle: ${vehicle}\nShoot Category: ${shootType}\nPreferred Date: ${bookingDate}\nTime Slot: ${bookingSlot}\n\nPreferred Location & Specs:\n${msgText}\n\nClient Email: ${email}`;
         
         submitBtn.classList.add('loading');
         submitBtn.disabled = true;
@@ -270,14 +267,34 @@ function initContactForm() {
             const data = await response.json();
             
             if (response.ok) {
-                showToast(data.message || 'Message sent successfully!', 'success');
+                showToast('Booking request submitted! Opening WhatsApp...', 'success');
+                
+                // Formulate the WhatsApp pre-filled message
+                const whatsappMsg = `*New Shoot Booking Request* 🎥📸\n` +
+                                    `-----------------------------------\n` +
+                                    `*Name:* ${name}\n` +
+                                    `*Email:* ${email}\n` +
+                                    `*Vehicle:* ${vehicle}\n` +
+                                    `*Shoot Type:* ${shootType}\n` +
+                                    `*Date:* ${bookingDate}\n` +
+                                    `*Slot:* ${bookingSlot}\n\n` +
+                                    `*Location & Details:*\n${msgText}`;
+                
+                const encodedMsg = encodeURIComponent(whatsappMsg);
+                const whatsappUrl = `https://wa.me/918121245333?text=${encodedMsg}`;
+                
+                // Open WhatsApp link in new tab after 1 second delay
+                setTimeout(() => {
+                    window.open(whatsappUrl, '_blank');
+                }, 1000);
+                
                 form.reset();
             } else {
-                showToast(data.error || 'Failed to submit contact request.', 'error');
+                showToast(data.error || 'Failed to submit booking request.', 'error');
             }
         } catch (error) {
-            console.error('Contact Form error:', error);
-            showToast('Unable to connect to the backend server.', 'error');
+            console.error('Booking Form error:', error);
+            showToast('Unable to connect to the studio server.', 'error');
         } finally {
             submitBtn.classList.remove('loading');
             submitBtn.disabled = false;

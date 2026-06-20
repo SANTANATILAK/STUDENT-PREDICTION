@@ -137,7 +137,7 @@ function initDashboard() {
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showToast('Task added to database!', 'success');
+                    showToast('Shoot added to tracker!', 'success');
                     addTaskForm.reset();
                     loadTasks();
                 } else {
@@ -180,7 +180,7 @@ function initDashboard() {
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showToast('Task details modified', 'success');
+                    showToast('Shoot details modified', 'success');
                     closeEditModal();
                     loadTasks();
                 } else {
@@ -238,10 +238,10 @@ function renderTasksList() {
     
     // Count pending remaining tasks
     const pendingCount = userTasks.filter(t => t.status === 'Pending').length;
-    countEl.textContent = `${pendingCount} Task${pendingCount !== 1 ? 's' : ''} Remaining`;
+    countEl.textContent = `${pendingCount} Active Shoot${pendingCount !== 1 ? 's' : ''} In Progress`;
     
     if (filtered.length === 0) {
-        list.innerHTML = `<p class="text-center text-muted" style="padding: 1.5rem 0;">No tasks found for this filter tab.</p>`;
+        list.innerHTML = `<p class="text-center text-muted" style="padding: 1.5rem 0;">No shoots found for this status.</p>`;
         return;
     }
     
@@ -297,7 +297,7 @@ async function toggleTaskStatus(id, checked) {
             if (idx !== -1) {
                 userTasks[idx].status = status;
                 renderTasksList();
-                showToast(status === 'Completed' ? 'Task marked complete' : 'Task marked pending', 'success');
+                showToast(status === 'Completed' ? 'Shoot marked delivered' : 'Shoot marked in progress', 'success');
             }
         } else {
             showToast('Failed to modify status', 'error');
@@ -309,7 +309,7 @@ async function toggleTaskStatus(id, checked) {
 }
 
 async function deleteTask(id) {
-    if (!confirm('Are you sure you want to delete this task?')) return;
+    if (!confirm('Are you sure you want to cancel tracking this shoot?')) return;
     
     try {
         const response = await fetch(`/api/tasks/${id}`, {
@@ -317,10 +317,10 @@ async function deleteTask(id) {
         });
         
         if (response.ok) {
-            showToast('Task removed from records', 'success');
+            showToast('Shoot removed from records', 'success');
             loadTasks();
         } else {
-            showToast('Failed to remove task', 'error');
+            showToast('Failed to remove shoot', 'error');
         }
     } catch (error) {
         showToast('Server query error', 'error');

@@ -1,0 +1,97 @@
+{
+  "id": "/?source=pwa",
+  "name": "Carbon Cinema",
+  "short_name": "CarbonCinema",
+  "description": "Premium Luxury Supercar & Superbike Photography Studio",
+  "categories": ["photography", "entertainment", "business"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "tabbed", "window-controls-overlay", "minimal-ui"],
+  "background_color": "#050505",
+  "theme_color": "#D4AF37",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "iarc_rating_id": "carbon-cinema-iarc-1",
+  "icons": [
+    {
+      "src": "/static/images/logo_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/logo_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/static/images/logo_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/logo_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/images/lambo_hero.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Carbon Cinema Mobile Showcase"
+    },
+    {
+      "src": "/static/images/porsche_portfolio.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Carbon Cinema Studio Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Production Tracker",
+      "url": "/tasks",
+      "description": "Track active vehicle shoots",
+      "icons": [{"src": "/static/images/logo_192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Print Store",
+      "url": "/shop",
+      "description": "Order fine art prints",
+      "icons": [{"src": "/static/images/logo_192.png", "sizes": "192x192"}]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "widgets": [
+    {
+      "name": "Production Calendar",
+      "short_name": "Calendar",
+      "description": "Check active shoot schedules",
+      "tag": "calendar",
+      "ms_ac_template": "",
+      "icons": [{"src": "/static/images/logo_192.png", "sizes": "192x192"}]
+    }
+  ]
+}

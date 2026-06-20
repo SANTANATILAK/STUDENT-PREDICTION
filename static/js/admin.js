@@ -279,7 +279,7 @@ function renderCatalogProducts() {
 }
 
 async function deleteCatalogProduct(id) {
-    if (!confirm('Are you sure you want to delete this hardware item?')) return;
+    if (!confirm('Are you sure you want to delete this inventory item?')) return;
     
     try {
         const response = await fetch(`/api/shop/products/${id}`, {
@@ -287,11 +287,11 @@ async function deleteCatalogProduct(id) {
         });
         
         if (response.ok) {
-            showToast('Product removed from catalog', 'success');
+            showToast('Item removed from inventory', 'success');
             loadCatalogProducts();
             loadAdminStats();
         } else {
-            showToast('Failed to delete product', 'error');
+            showToast('Failed to delete item', 'error');
         }
     } catch (error) {
         showToast('API request error', 'error');
@@ -337,7 +337,7 @@ function initProductForm() {
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showToast(isEdit ? 'Product updated successfully' : 'Product added successfully!', 'success');
+                    showToast(isEdit ? 'Item updated successfully' : 'Item added successfully!', 'success');
                     closeProductModal();
                     loadCatalogProducts();
                     loadAdminStats();
@@ -358,7 +358,7 @@ function openAddProductModal() {
     
     if (!modal) return;
     
-    heading.textContent = 'Create Catalog Product';
+    heading.textContent = 'Create Catalog Item';
     document.getElementById('adminProductId').value = '';
     document.getElementById('adminProductName').value = '';
     document.getElementById('adminProductCategory').value = '';
@@ -377,7 +377,7 @@ function openProductEditModal(prod) {
     
     if (!modal) return;
     
-    heading.textContent = 'Modify Catalog Product';
+    heading.textContent = 'Modify Catalog Item';
     document.getElementById('adminProductId').value = prod.id;
     document.getElementById('adminProductName').value = prod.name;
     document.getElementById('adminProductCategory').value = prod.category;

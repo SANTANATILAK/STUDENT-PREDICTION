@@ -45,7 +45,7 @@ function renderCategories() {
     if (!list) return;
     
     // Keep 'All' button and clear remainder
-    list.innerHTML = `<button class="shop-cat-btn active" data-cat="all">All Gear</button>`;
+    list.innerHTML = `<button class="shop-cat-btn active" data-cat="all">All Prints & Presets</button>`;
     
     shopCategories.forEach(cat => {
         const btn = document.createElement('button');
@@ -88,7 +88,7 @@ function renderCatalog() {
     }
     
     if (filtered.length === 0) {
-        grid.innerHTML = `<p class="text-center text-muted" style="grid-column: span 2; padding: 2rem 0;">No hardware gear matches your query.</p>`;
+        grid.innerHTML = `<p class="text-center text-muted" style="grid-column: span 2; padding: 2rem 0;">No prints or presets match your search query.</p>`;
         return;
     }
     
@@ -182,6 +182,17 @@ function initCartDrawer() {
     
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', checkoutCart);
+    }
+    
+    const paymentModalClose = document.getElementById('paymentModalCloseBtn');
+    const paymentModal = document.getElementById('upiPaymentModal');
+    if (paymentModalClose && paymentModal) {
+        paymentModalClose.addEventListener('click', () => {
+            paymentModal.classList.remove('active');
+        });
+        paymentModal.addEventListener('click', (e) => {
+            if (e.target === paymentModal) paymentModal.classList.remove('active');
+        });
     }
     
     // Load cached cart from session storage if exists
@@ -328,7 +339,7 @@ function handleShopAuthStateChange(auth) {
     }
 }
 
-async function checkoutCart() {
+function checkoutCart() {
     if (cart.length === 0) {
         showToast('Your cart is empty', 'warning');
         return;
@@ -339,36 +350,50 @@ async function checkoutCart() {
         return;
     }
     
-    const checkoutBtn = document.getElementById('cartCheckoutBtn');
-    checkoutBtn.disabled = true;
-    checkoutBtn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Submitting Order...`;
+    // Close the cart drawer
+    const drawer = document.getElementById('cartDrawer');
+    if (drawer) drawer.classList.remove('active');
     
-    try {
-        const response = await fetch('/api/shop/orders', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items: cart })
-        });
-        const data = await response.json();
+    // Open UPI payment modal
+    const paymentModal = document.getElementById('upiPaymentModal');
+    if (paymentModal) {
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = subtotal * 0.08;
+        const total = subtotal + tax;
+        document.getElementById('paymentModalTotal').textContent = `$${total.toFixed(2)}`;
         
-        if (response.ok) {
-            showToast('Order placed successfully! Check invoice history.', 'success');
-            cart = [];
-            saveAndRenderCart();
+        paymentModal.classList.add('active');
+        
+        // Setup confirmation button click handler
+        const confirmBtn = document.getElementById('upiConfirmPaymentBtn');
+        confirmBtn.onclick = async () => {
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Submitting Order...`;
             
-            // Close cart drawer
-            const drawer = document.getElementById('cartDrawer');
-            if (drawer) drawer.classList.remove('active');
-            
-            fetchOrders();
-        } else {
-            showToast(data.error || 'Failed to place order', 'error');
-        }
-    } catch (error) {
-        showToast('Checkout connection error', 'error');
-    } finally {
-        checkoutBtn.disabled = false;
-        checkoutBtn.innerHTML = `<i class='bx bx-credit-card-front'></i> Proceed to Checkout`;
+            try {
+                const response = await fetch('/api/shop/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: cart })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showToast('Order confirmed! Send screenshot to +91 81212 45333 via WhatsApp.', 'success');
+                    cart = [];
+                    saveAndRenderCart();
+                    paymentModal.classList.remove('active');
+                    fetchOrders();
+                } else {
+                    showToast(data.error || 'Failed to place order', 'error');
+                }
+            } catch (error) {
+                showToast('Checkout connection error', 'error');
+            } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = `<i class='bx bx-check-shield'></i> Confirm Payment & Place Order`;
+            }
+        };
     }
 }
 

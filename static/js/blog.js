@@ -62,7 +62,7 @@ function renderBlogPostsList() {
             <h3>${post.title}</h3>
             <p>${summary}</p>
             <div class="read-more-row">
-                <span>Read Full Article <i class='bx bx-right-arrow-alt'></i></span>
+                <span>Read Full Story <i class='bx bx-right-arrow-alt'></i></span>
                 <span class="badge comments-count-pill">${post.comments_count} Comment${post.comments_count !== 1 ? 's' : ''}</span>
             </div>
         `;
@@ -136,7 +136,7 @@ async function viewPostDetails(id) {
         // Scroll to top of article
         window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
-        showToast('Error loading article details', 'error');
+        showToast('Error loading story details', 'error');
         showPostsList();
     }
 }
@@ -239,7 +239,7 @@ function initBlogForms() {
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showToast(isEdit ? 'Article changes saved' : 'Article published successfully!', 'success');
+                    showToast(isEdit ? 'Story changes saved' : 'Story published successfully!', 'success');
                     closeBlogPostModal();
                     
                     if (isEdit) {
@@ -275,7 +275,7 @@ function handleBlogAuthStateChange(auth) {
     } else {
         authCard.innerHTML = `
             <h3>Join the Journal</h3>
-            <p>Register or log in to create and publish your own articles on this platform.</p>
+            <p>Register or log in to post comments or publish your own behind-the-scenes stories.</p>
             <button class="btn btn-primary btn-sm btn-block" onclick="window.location.href='/tasks'">
                 Log In / Sign Up
             </button>
@@ -307,7 +307,7 @@ function openBlogPostModal(mode, post = null) {
     if (!modal) return;
     
     if (mode === 'edit' && post) {
-        heading.innerHTML = `<i class='bx bx-edit-alt'></i> Modify Article`;
+        heading.innerHTML = `<i class='bx bx-edit-alt'></i> Modify Story`;
         document.getElementById('blogPostId').value = post.id;
         document.getElementById('blogPostTitle').value = post.title;
         document.getElementById('blogPostContent').value = post.content;
@@ -317,7 +317,7 @@ function openBlogPostModal(mode, post = null) {
         document.getElementById('blogPostId').value = '';
         document.getElementById('blogPostTitle').value = '';
         document.getElementById('blogPostContent').value = '';
-        submitBtn.textContent = 'Publish Article';
+        submitBtn.textContent = 'Publish Story';
     }
     
     modal.classList.add('active');
@@ -337,10 +337,10 @@ async function deleteBlogPost(id) {
         });
         
         if (response.ok) {
-            showToast('Article removed from database', 'success');
+            showToast('Story removed from database', 'success');
             showPostsList();
         } else {
-            showToast('Failed to delete article', 'error');
+            showToast('Failed to delete story', 'error');
         }
     } catch (error) {
         showToast('Server delete error', 'error');
