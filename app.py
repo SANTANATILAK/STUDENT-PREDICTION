@@ -1,14 +1,27 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from config import Config
-from models import db, User, Skill, ContactMessage, Task, Product, Order, OrderItem, Post, Comment
+from models import db, User, Skill, ContactMessage, Task, Product, Order, OrderItem, Post, Comment, StudentPrediction
 from functools import wraps
 import os
+import joblib
+import pandas as pd
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 # Initialize database
 db.init_app(app)
+
+# Load XGBoost model on startup
+student_model = None
+model_path = os.path.join(os.path.dirname(__file__), 'student_model.pkl')
+if os.path.exists(model_path):
+    try:
+        student_model = joblib.load(model_path)
+        print("Student Performance XGBoost model loaded successfully.")
+    except Exception as e:
+        print(f"Error loading student model: {str(e)}")
+
 
 # Authentication Decorators
 def login_required(f):
@@ -50,6 +63,11 @@ def blog_page():
 @app.route('/admin')
 def admin_page():
     return render_template('admin.html')
+
+@app.route('/student')
+def student_page():
+    return render_template('student.html')
+
 
 @app.route('/sw.js')
 def serve_sw():
@@ -657,6 +675,7 @@ def admin_get_stats():
     unread_msg = ContactMessage.query.filter_by(is_read=False).count()
     post_count = Post.query.count()
     comment_count = Comment.query.count()
+    student_predictions_count = StudentPrediction.query.count()
     
     return jsonify({
         'users': user_count,
@@ -666,8 +685,109 @@ def admin_get_stats():
         'messages': msg_count,
         'unread_messages': unread_msg,
         'posts': post_count,
-        'comments': comment_count
+        'comments': comment_count,
+        'student_predictions': student_predictions_count
     })
+
+# ==========================================
+# STUDENT PERFORMANCE API
+# ==========================================
+@app.route('/api/predict_student', methods=['POST'])
+def api_predict_student():
+    global student_model
+    data = request.get_json() or {}
+    
+    # Extract features
+    gender = data.get('gender', '').strip()
+    race_ethnicity = data.get('race_ethnicity', '').strip()
+    parental_education = data.get('parental_education', '').strip()
+    lunch = data.get('lunch', '').strip()
+    test_prep = data.get('test_prep', '').strip()
+    
+    try:
+        reading_score = float(data.get('reading_score', 0))
+        writing_score = float(data.get('writing_score', 0))
+    except (ValueError, TypeError):
+        return jsonify({'error': 'Reading and writing scores must be numbers'}), 400
+        
+    # Standard Kaggle dataset has 'average_score' calculated as average of reading and writing scores
+    # if math score is not known. If math score is known (like in training), it is (math + reading + writing)/3.
+    # To be consistent with how the model was trained, let's use the actual formula:
+    # average_score = (reading_score + writing_score) / 2 as a proxy, or if they specify a custom average_score.
+    if 'average_score' in data:
+        try:
+            average_score = float(data.get('average_score'))
+        except (ValueError, TypeError):
+            average_score = (reading_score + writing_score) / 2
+    else:
+        average_score = (reading_score + writing_score) / 2
+        
+    if not all([gender, race_ethnicity, parental_education, lunch, test_prep]):
+        return jsonify({'error': 'All features are required (gender, race/ethnicity, parental education, lunch, test prep)'}), 400
+        
+    # Load model if not loaded
+    if student_model is None:
+        model_path = os.path.join(os.path.dirname(__file__), 'student_model.pkl')
+        if os.path.exists(model_path):
+            try:
+                student_model = joblib.load(model_path)
+            except Exception as e:
+                return jsonify({'error': f'Model load failed: {str(e)}'}), 500
+        else:
+            return jsonify({'error': 'Prediction model file (student_model.pkl) not found'}), 500
+            
+    # Prepare sample DataFrame matching training schema
+    sample_df = pd.DataFrame({
+        'gender': [gender],
+        'race/ethnicity': [race_ethnicity],
+        'parental level of education': [parental_education],
+        'lunch': [lunch],
+        'test preparation course': [test_prep],
+        'reading score': [reading_score],
+        'writing score': [writing_score],
+        'average_score': [average_score]
+    })
+    
+    try:
+        prediction = student_model.predict(sample_df)
+        predicted_math = float(prediction[0])
+        # Clip to valid range [0, 100]
+        predicted_math = max(0.0, min(100.0, predicted_math))
+    except Exception as e:
+        return jsonify({'error': f'Prediction failed: {str(e)}'}), 500
+        
+    # Save prediction to DB
+    user_id = session.get('user_id')
+    pred_record = StudentPrediction(
+        user_id=user_id,
+        gender=gender,
+        race_ethnicity=race_ethnicity,
+        parental_education=parental_education,
+        lunch=lunch,
+        test_prep=test_prep,
+        reading_score=int(reading_score),
+        writing_score=int(writing_score),
+        average_score=float(average_score),
+        predicted_math_score=predicted_math
+    )
+    db.session.add(pred_record)
+    db.session.commit()
+    
+    return jsonify({
+        'success': True,
+        'predicted_math_score': round(predicted_math, 2),
+        'prediction': pred_record.to_dict()
+    })
+
+@app.route('/api/predict_student/history', methods=['GET'])
+def api_student_history():
+    user_id = session.get('user_id')
+    if user_id:
+        predictions = StudentPrediction.query.filter_by(user_id=user_id).order_by(StudentPrediction.created_at.desc()).all()
+    else:
+        predictions = StudentPrediction.query.order_by(StudentPrediction.created_at.desc()).limit(10).all()
+        
+    return jsonify([p.to_dict() for p in predictions])
 
 
 if __name__ == '__main__':
@@ -676,3 +796,4 @@ if __name__ == '__main__':
         db.create_all()
     # Serve locally
     app.run(host='0.0.0.0', port=5000, debug=True)
+

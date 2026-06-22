@@ -55,10 +55,14 @@
                 <a href="/blog" class="nav-link {% if request.path == '/blog' %}active{% endif %}">
                     <i class='bx bx-book-open nav-icon'></i>Stories
                 </a>
+                <a href="/student" class="nav-link {% if request.path == '/student' %}active{% endif %}">
+                    <i class='bx bx-brain nav-icon'></i>Predictor
+                </a>
                 <a href="/admin" class="nav-link {% if request.path == '/admin' %}active{% endif %}">
                     <i class='bx bx-slider-alt nav-icon'></i>Studio Portal
                 </a>
             </nav>
+
             
             <div class="nav-auth" id="navAuth">
                 <!-- Session status loaded dynamically by main.js -->

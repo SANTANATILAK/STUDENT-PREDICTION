@@ -188,3 +188,38 @@ class Comment(db.Model):
             'content': self.content,
             'created_at': self.created_at.isoformat()
         }
+
+class StudentPrediction(db.Model):
+    __tablename__ = 'student_predictions'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    gender = db.Column(db.String(10), nullable=False)
+    race_ethnicity = db.Column(db.String(20), nullable=False)
+    parental_education = db.Column(db.String(50), nullable=False)
+    lunch = db.Column(db.String(20), nullable=False)
+    test_prep = db.Column(db.String(20), nullable=False)
+    reading_score = db.Column(db.Integer, nullable=False)
+    writing_score = db.Column(db.Integer, nullable=False)
+    average_score = db.Column(db.Float, nullable=False)
+    predicted_math_score = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='student_predictions', lazy=True)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'gender': self.gender,
+            'race_ethnicity': self.race_ethnicity,
+            'parental_education': self.parental_education,
+            'lunch': self.lunch,
+            'test_prep': self.test_prep,
+            'reading_score': self.reading_score,
+            'writing_score': self.writing_score,
+            'average_score': self.average_score,
+            'predicted_math_score': round(self.predicted_math_score, 2),
+            'created_at': self.created_at.isoformat()
+        }
+
