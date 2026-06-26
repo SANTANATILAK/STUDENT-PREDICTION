@@ -1880,7 +1880,29 @@ input:focus, select:focus, textarea:focus {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+    
+    /* Cinematic Hero Mobile Responsive Overrides */
+    .hero-content-cinematic h1 {
+        font-size: 2.2rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 0.8rem !important;
+    }
+    .hero-content-cinematic h2 {
+        font-size: 0.95rem !important;
+        letter-spacing: 0.08em !important;
+        margin-bottom: 1.2rem !important;
+    }
+    .hero-content-cinematic p {
+        font-size: 0.85rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+    .hero-logo-crown {
+        width: 60px !important;
+        height: 60px !important;
+        margin-bottom: 0.5rem !important;
+    }
 }
+
 
 /* ==========================================================================
    CARBON CINEMA CUSTOM SYSTEM ADDITIONS (Cinematic Hero, Portfolio Cards, UPI Payment)

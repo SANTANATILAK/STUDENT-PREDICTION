@@ -34,8 +34,21 @@ function initNavigation() {
                 icon.className = 'bx bx-menu';
             }
         });
+
+        // Close mobile menu when a link is clicked
+        const navLinks = navMenu.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    const icon = navToggle.querySelector('i');
+                    if (icon) icon.className = 'bx bx-menu';
+                }
+            });
+        });
     }
 }
+
 
 // ==========================================
 // AUTHENTICATION STATE WATCHER
