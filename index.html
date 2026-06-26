@@ -13,6 +13,9 @@
     <!-- Boxicons for Premium Icons -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         /* ==========================================================================
            DESIGN VARIABLES & RESET
@@ -827,6 +830,19 @@
             background: rgba(212, 175, 55, 0.4);
         }
 
+        /* Analytics Grid Layout */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        @media (max-width: 768px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         footer {
             text-align: center;
             padding: 3rem 2rem;
@@ -1046,6 +1062,26 @@
             </div>
         </div>
 
+        <!-- Predictive Analytics Charts Section -->
+        <div id="analyticsSection" class="card" style="margin-top: 2rem; display: none;">
+            <div class="card-header">
+                <div>
+                    <h3><i class='bx bx-bar-chart-square'></i> Socio-Academic Analytics Insights</h3>
+                    <span class="card-subtitle">Algorithmic feature weights and dynamic socio-academic impact simulation</span>
+                </div>
+            </div>
+            <div class="analytics-grid">
+                <div style="position: relative; height: 320px; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.02);">
+                    <h4 style="font-family: var(--font-heading); color: #fff; font-size: 0.9rem; margin-bottom: 0.8rem; text-align: center;"><i class='bx bx-analyse' style="color: var(--color-primary); margin-right: 4px;"></i> Dynamic Impact Simulation</h4>
+                    <canvas id="impactSimulationChart"></canvas>
+                </div>
+                <div style="position: relative; height: 320px; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.02);">
+                    <h4 style="font-family: var(--font-heading); color: #fff; font-size: 0.9rem; margin-bottom: 0.8rem; text-align: center;"><i class='bx bx-slider' style="color: var(--color-primary); margin-right: 4px;"></i> Feature Importance Weight %</h4>
+                    <canvas id="featureImportanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- Session Calculation Log Section -->
         <div id="historySection" class="card history-card" style="display: none;">
             <div class="card-header" style="margin-bottom: 1rem;">
@@ -1088,7 +1124,7 @@
     <div id="toastContainer" class="toast-container"></div>
 
     <footer>
-        <p>&copy; 2026 Student Performance Prediction System. Hosted 365 Days Client-Side via GitHub Pages.</p>
+        <p>&copy; 2026 Student Performance Prediction System. Runs 24/7/2365 completely free with zero maintenance or server spin-downs. Hosted Client-Side via GitHub Pages.</p>
     </footer>
 
     <!-- ==========================================================================
@@ -1099,6 +1135,8 @@
             // State variables
             let xgboostTrees = [];
             let lastPredictionResult = null;
+            let featureImportanceChart = null;
+            let impactSimulationChart = null;
 
             // DOM Elements
             const engineLoader = document.getElementById('engineLoader');
@@ -1106,6 +1144,7 @@
             const loaderProgressBar = document.getElementById('loaderProgressBar');
             
             const dashboardContainer = document.getElementById('dashboardContainer');
+            const analyticsSection = document.getElementById('analyticsSection');
             const historySection = document.getElementById('historySection');
             
             const predictorForm = document.getElementById('predictorForm');
@@ -1157,11 +1196,13 @@
                     setTimeout(() => {
                         engineLoader.style.display = 'none';
                         dashboardContainer.style.display = 'grid';
+                        analyticsSection.style.display = 'block';
                         historySection.style.display = 'block';
                         
                         showToast('ML Decision Trees loaded. Engine online.', 'success');
                         
-                        // Execute initial prediction
+                        // Initialize charts and execute initial prediction
+                        initCharts();
                         runPrediction();
                         renderHistory();
                     }, 500);
@@ -1320,6 +1361,133 @@
                 driverLunchText.style.color = inputData.lunch === 'standard' ? 'var(--color-excellent)' : '#e67e22';
 
                 driverParentEduText.innerText = capitalizeWords(inputData.parental_education);
+
+                // Run impact simulations for charts
+                const scoreCurrent = score;
+                
+                const scorePrep = predictMathScore({
+                    ...inputData,
+                    test_prep: 'completed'
+                });
+                
+                const scoreLunch = predictMathScore({
+                    ...inputData,
+                    lunch: 'standard'
+                });
+                
+                const scoreIdeal = predictMathScore({
+                    ...inputData,
+                    lunch: 'standard',
+                    test_prep: 'completed'
+                });
+
+                if (impactSimulationChart) {
+                    impactSimulationChart.data.datasets[0].data = [
+                        parseFloat(scoreCurrent.toFixed(1)),
+                        parseFloat(scorePrep.toFixed(1)),
+                        parseFloat(scoreLunch.toFixed(1)),
+                        parseFloat(scoreIdeal.toFixed(1))
+                    ];
+                    impactSimulationChart.update('none'); // Silent update to prevent UI stuttering
+                }
+            }
+
+            // 4.5. Initialize Charts.js Analytics
+            function initCharts() {
+                // Feature Importance Chart
+                const ctx1 = document.getElementById('featureImportanceChart').getContext('2d');
+                featureImportanceChart = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Reading Score', 'Writing Score', 'Average Score', 'Lunch Program', 'Prep Course', 'Education & Demographics'],
+                        datasets: [{
+                            label: 'Relative Weight %',
+                            data: [35, 30, 17, 10, 6, 2],
+                            backgroundColor: [
+                                'rgba(212, 175, 55, 0.85)',
+                                'rgba(170, 139, 44, 0.85)',
+                                'rgba(243, 229, 171, 0.85)',
+                                'rgba(46, 204, 113, 0.85)',
+                                'rgba(241, 196, 15, 0.85)',
+                                'rgba(231, 76, 60, 0.85)'
+                            ],
+                            borderWidth: 0,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(10, 10, 10, 0.95)',
+                                titleColor: '#fff',
+                                bodyColor: '#e0e0e0',
+                                borderColor: 'rgba(212, 175, 55, 0.2)',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                                ticks: { color: '#a0a0a0', callback: val => val + '%' }
+                            },
+                            y: {
+                                grid: { display: false },
+                                ticks: { color: '#fff', font: { family: 'Outfit', size: 11 } }
+                            }
+                        }
+                    }
+                });
+
+                // Socio-Academic Impact Chart
+                const ctx2 = document.getElementById('impactSimulationChart').getContext('2d');
+                impactSimulationChart = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Current Config', 'With Prep Course', 'With Standard Lunch', 'Optimized Ideal'],
+                        datasets: [{
+                            label: 'Predicted Score',
+                            data: [0, 0, 0, 0],
+                            backgroundColor: [
+                                'rgba(243, 229, 171, 0.85)', // Champagne
+                                'rgba(212, 175, 55, 0.85)',  // Gold
+                                'rgba(170, 139, 44, 0.85)',  // Deep Gold
+                                'rgba(46, 204, 113, 0.85)'   // Emerald Green
+                            ],
+                            borderWidth: 0,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(10, 10, 10, 0.95)',
+                                titleColor: '#fff',
+                                bodyColor: '#e0e0e0',
+                                borderColor: 'rgba(212, 175, 55, 0.2)',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                                ticks: { color: '#a0a0a0' },
+                                min: 0,
+                                max: 100
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#fff', font: { family: 'Outfit', size: 10 } }
+                            }
+                        }
+                    }
+                });
             }
 
             // 5. Local Calculation History System (Stored in LocalStorage)
