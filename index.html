@@ -1076,7 +1076,7 @@
                     <canvas id="impactSimulationChart"></canvas>
                 </div>
                 <div style="position: relative; height: 320px; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.02);">
-                    <h4 style="font-family: var(--font-heading); color: #fff; font-size: 0.9rem; margin-bottom: 0.8rem; text-align: center;"><i class='bx bx-slider' style="color: var(--color-primary); margin-right: 4px;"></i> Feature Importance Weight %</h4>
+                    <h4 style="font-family: var(--font-heading); color: #fff; font-size: 0.9rem; margin-bottom: 0.8rem; text-align: center;"><i class='bx bx-git-compare' style="color: var(--color-primary); margin-right: 4px;"></i> Student vs Database Average</h4>
                     <canvas id="featureImportanceChart"></canvas>
                 </div>
             </div>
@@ -1390,37 +1390,50 @@
                     ];
                     impactSimulationChart.update('none'); // Silent update to prevent UI stuttering
                 }
+
+                if (featureImportanceChart) {
+                    featureImportanceChart.data.datasets[0].data = [
+                        parseFloat(inputData.reading_score),
+                        parseFloat(inputData.writing_score),
+                        parseFloat(scoreCurrent.toFixed(1))
+                    ];
+                    featureImportanceChart.update('none'); // Silent update
+                }
             }
 
             // 4.5. Initialize Charts.js Analytics
             function initCharts() {
-                // Feature Importance Chart
+                // Student vs. Average Comparison Chart
                 const ctx1 = document.getElementById('featureImportanceChart').getContext('2d');
                 featureImportanceChart = new Chart(ctx1, {
                     type: 'bar',
                     data: {
-                        labels: ['Reading Score', 'Writing Score', 'Average Score', 'Lunch Program', 'Prep Course', 'Education & Demographics'],
-                        datasets: [{
-                            label: 'Relative Weight %',
-                            data: [35, 30, 17, 10, 6, 2],
-                            backgroundColor: [
-                                'rgba(212, 175, 55, 0.85)',
-                                'rgba(170, 139, 44, 0.85)',
-                                'rgba(243, 229, 171, 0.85)',
-                                'rgba(46, 204, 113, 0.85)',
-                                'rgba(241, 196, 15, 0.85)',
-                                'rgba(231, 76, 60, 0.85)'
-                            ],
-                            borderWidth: 0,
-                            borderRadius: 4
-                        }]
+                        labels: ['Reading Score', 'Writing Score', 'Math (Predicted)'],
+                        datasets: [
+                            {
+                                label: 'Your Student',
+                                data: [0, 0, 0],
+                                backgroundColor: 'rgba(212, 175, 55, 0.85)', // Gold
+                                borderWidth: 0,
+                                borderRadius: 4
+                            },
+                            {
+                                label: 'Database Average',
+                                data: [69.6, 68.5, 66.1],
+                                backgroundColor: 'rgba(255, 255, 255, 0.15)', // Translucent White
+                                borderWidth: 0,
+                                borderRadius: 4
+                            }
+                        ]
                     },
                     options: {
-                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false },
+                            legend: { 
+                                display: true,
+                                labels: { color: '#fff', font: { family: 'Outfit', size: 10 } }
+                            },
                             tooltip: {
                                 backgroundColor: 'rgba(10, 10, 10, 0.95)',
                                 titleColor: '#fff',
@@ -1430,11 +1443,13 @@
                             }
                         },
                         scales: {
-                            x: {
-                                grid: { color: 'rgba(255, 255, 255, 0.04)' },
-                                ticks: { color: '#a0a0a0', callback: val => val + '%' }
-                            },
                             y: {
+                                grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                                ticks: { color: '#a0a0a0' },
+                                min: 0,
+                                max: 100
+                            },
+                            x: {
                                 grid: { display: false },
                                 ticks: { color: '#fff', font: { family: 'Outfit', size: 11 } }
                             }
