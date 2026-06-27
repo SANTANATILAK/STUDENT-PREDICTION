@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: carbon-cinema
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        value: "dummy-id-replace-in-render-dashboard"
